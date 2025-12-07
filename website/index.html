@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dara Rahmat Samii | CFD + ML Researcher</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <span class="logo-text">DRS</span>
+            </a>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#education" class="nav-link">Education</a></li>
+                <li><a href="#publications" class="nav-link">Publications</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="pages/blog.html" class="nav-link">Blog</a></li>
+                <li><a href="pages/piano.html" class="nav-link">Piano</a></li>
+                /* <li><a href="pages/friends.html" class="nav-link">Friends</a></li>*/
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-bg">
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+            <div class="gradient-orb orb-3"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <p class="hero-greeting">Hello, I'm</p>
+                <h1 class="hero-name">Dara Rahmat Samii</h1>
+                <div class="hero-title-wrapper">
+                    <span class="hero-title">CFD Researcher</span>
+                    <span class="hero-separator">×</span>
+                    <span class="hero-title">ML Engineer</span>
+                    <span class="hero-separator">×</span>
+                    <span class="hero-title">Rocketeer</span>
+                </div>
+                <p class="hero-description">
+                    M.Sc. student at Concordia University bridging Computational Fluid Dynamics 
+                    with Machine Learning to accelerate simulations and unlock new insights in thermal spray coatings.
+                </p>
+                <div class="hero-cta">
+                    <a href="#projects" class="btn btn-primary">View My Work</a>
+                    <a href="mailto:dara.rahmatsamii@mail.concordia.ca" class="btn btn-secondary">Get In Touch</a>
+                </div>
+                <div class="hero-social">
+                    <a href="https://www.linkedin.com/in/dara-samii" target="_blank" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://github.com/DaraSamii" target="_blank" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://scholar.google.com/citations?user=YOUR_ID" target="_blank" aria-label="Google Scholar">
+                        <i class="fas fa-graduation-cap"></i>
+                    </a>
+                    <a href="https://www.youtube.com/@dara_samii" target="_blank" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="https://x.com/dara_samii" target="_blank" aria-label="X/Twitter">
+                        <i class="fab fa-x-twitter"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="image-frame">
+                    <div class="image-slider">
+                        <img src="assets/images/profile/1.jpg" alt="Dara Rahmat Samii">
+                        <img src="assets/images/profile/2.jpg" alt="Dara Rahmat Samii">
+                        <img src="assets/images/profile/3.jpg" alt="Dara Rahmat Samii">
+                        <img src="assets/images/profile/4.jpg" alt="Dara Rahmat Samii">
+                        <img src="assets/images/profile/5.jpg" alt="Dara Rahmat Samii">
+                        <img src="assets/images/profile/6.jpg" alt="Dara Rahmat Samii">
+                        <img src="assets/images/profile/7.jpg" alt="Dara Rahmat Samii">
+                        <img src="assets/images/profile/8.jpg" alt="Dara Rahmat Samii">
+                        <img src="assets/images/profile/9.jpg" alt="Dara Rahmat Samii">
+                        <img src="assets/images/profile/10.jpg" alt="Dara Rahmat Samii">
+                    </div>
+                </div>
+
+                <div class="floating-badge badge-1">
+                    <i class="fas fa-rocket"></i>
+                    <span>L2 Certified</span>
+                </div>
+                <div class="floating-badge badge-2">
+                    <span class="gpa">4.23</span>
+                    <span class="gpa-label">GPA</span>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="lead">
+                        I'm a Master's student in Mechanical Engineering with a background in Chemical Engineering, 
+                        focused on integrating machine learning with computational fluid dynamics.
+                    </p>
+                    <p>
+                        My research explores how Graph Neural Networks can accelerate CFD simulations, 
+                        achieving up to <strong>100× speedup</strong> over traditional solvers. I'm particularly 
+                        interested in thermal spray coating prediction using aeroacoustic signals.
+                    </p>
+                    <p>
+                        Beyond research, I lead CFD simulations for SpaceConcordia's solid rocketry team 
+                        and hold an L2 rocketry certification from the Tripoli Rocketry Association.
+                    </p>
+                </div>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3><i class="fas fa-cube"></i> Simulation</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">OpenFOAM</span>
+                            <span class="skill-tag">ANSYS Fluent</span>
+                            <span class="skill-tag">COMSOL</span>
+                            <span class="skill-tag">ParaView</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h3><i class="fas fa-code"></i> Programming</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">C++</span>
+                            <span class="skill-tag">MATLAB</span>
+                            <span class="skill-tag">Arduino</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h3><i class="fas fa-brain"></i> ML/DL</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">PyTorch</span>
+                            <span class="skill-tag">PyG</span>
+                            <span class="skill-tag">scikit-learn</span>
+                            <span class="skill-tag">fast.ai</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h3><i class="fas fa-tools"></i> Tools</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Git</span>
+                            <span class="skill-tag">Docker</span>
+                            <span class="skill-tag">Linux</span>
+                            <span class="skill-tag">LaTeX</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="education">
+        <div class="container">
+            <h2 class="section-title">Education</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="edu-header">
+                            <img src="assets/images/logos/concordia-logo.png" alt="Concordia University" class="edu-logo">
+                            <div class="edu-info">
+                                <h3>Concordia University</h3>
+                                <p class="degree">M.Sc. in Mechanical Engineering</p>
+                                <p class="location"><i class="fas fa-map-marker-alt"></i> Montréal, Canada</p>
+                            </div>
+                            <div class="edu-date">
+                                <span>2023 — 2025</span>
+                                <span class="gpa-badge">GPA: 4.23/4.3</span>
+                            </div>
+                        </div>
+                        <div class="edu-details">
+                            <p><strong>Advisor:</strong> Prof. Moussa Tembely</p>
+                            <p><strong>Thesis:</strong> Machine Learning for Predicting Thermal Spray Coating Properties from Aeroacoustic Signals</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="edu-header">
+                            <img src="assets/images/logos/ut-logo.png" alt="University of Tehran" class="edu-logo">
+                            <div class="edu-info">
+                                <h3>University of Tehran</h3>
+                                <p class="degree">M.Sc. in Chemical Engineering</p>
+                                <p class="location"><i class="fas fa-map-marker-alt"></i> Tehran, Iran</p>
+                            </div>
+                            <div class="edu-date">
+                                <span>2022 — 2023</span>
+                            </div>
+                        </div>
+                        <div class="edu-details">
+                            <p><strong>Focus:</strong> Process Design and Simulation</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="edu-header">
+                            <img src="assets/images/logos/iust-logo.png" alt="Iran University of Science and Technology" class="edu-logo">
+                            <div class="edu-info">
+                                <h3>Iran University of Science and Technology</h3>
+                                <p class="degree">B.Sc. in Chemical Engineering</p>
+                                <p class="location"><i class="fas fa-map-marker-alt"></i> Tehran, Iran</p>
+                            </div>
+                            <div class="edu-date">
+                                <span>2018 — 2022</span>
+                                <span class="gpa-badge">GPA: 3.58/4</span>
+                            </div>
+                        </div>
+                        <div class="edu-details">
+                            <p><strong>Advisor:</strong> Prof. S.H. HashemAbadi</p>
+                            <p><strong>Thesis:</strong> Design and Manufacturing of a Gas Rotameter using CFD</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Publications Section -->
+    <section id="publications" class="publications">
+        <div class="container">
+            <h2 class="section-title">Publications</h2>
+            <div class="pub-grid">
+                <article class="pub-card">
+                    <div class="pub-year">2025</div>
+                    <div class="pub-content">
+                        <h3>Accelerating Thermal Homann Flow Simulation With Mesh-Based Graph Neural Networks</h3>
+                        <p class="pub-authors"><strong>D. Rahmat Samii</strong>, M. Tembely</p>
+                        <p class="pub-journal"><i class="fas fa-journal-whills"></i> IEEE Access</p>
+                        <div class="pub-links">
+                            <a href="https://ieeexplore.ieee.org/document/11025840" target="_blank" class="pub-link">
+                                <i class="fas fa-external-link-alt"></i> DOI
+                            </a>
+                            <a href="https://github.com/DaraSamii/MeshGraphNet_Homann_results" target="_blank" class="pub-link">
+                                <i class="fab fa-github"></i> Code
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="pub-card">
+                    <div class="pub-year">2023</div>
+                    <div class="pub-content">
+                        <h3>CFD Based Design Gas Rotameters: Dynamic Mesh Transient Simulation</h3>
+                        <p class="pub-authors"><strong>D. Rahmat Samii</strong>, S. H. HashemAbadi, P. Margan</p>
+                        <p class="pub-journal"><i class="fas fa-journal-whills"></i> Flow Measurement and Instrumentation</p>
+                        <div class="pub-links">
+                            <a href="https://doi.org/10.1016/j.flowmeasinst.2023.102513" target="_blank" class="pub-link">
+                                <i class="fas fa-external-link-alt"></i> DOI
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+<!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <div class="projects-grid">
+                <article class="project-card featured">
+                    <div class="project-image">
+                        <img src="assets/images/projects/meshGnn.png" alt="MeshGraphNet Project">
+                    </div>
+                    <div class="project-content">
+                        <span class="project-tag">Featured</span>
+                        <h3>Mesh-Based GNN for CFD Acceleration</h3>
+                        <p>Achieved <strong>100× speedup</strong> over traditional solvers by converting OpenFOAM polyMesh to graph inputs and training Graph Neural Networks for thermal Homann flow prediction.</p>
+                        <div class="project-tech">
+                            <span>PyTorch</span>
+                            <span>PyG</span>
+                            <span>OpenFOAM</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/DaraSamii/MeshGraphNet_Homann_results" target="_blank">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                            <a href="https://ieeexplore.ieee.org/document/11025840" target="_blank">
+                                <i class="fas fa-file-alt"></i> Paper
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card featured">
+                    <div class="project-image">
+                        <img src="assets/images/projects/CR25_mach.png" alt="CR25 Mach Analysis">
+                    </div>
+                    <div class="project-content">
+                        <span class="project-tag">Featured</span>
+                        <h3>SpaceConcordia CR25 "Aether" CFD Analysis</h3>
+                        <p>CR25 "Aether" was SpaceConcordia's 2025 rocket with a unique transition design. Due to its unconventional shape, classic equations and load analysis weren't applicable, so an <strong>OpenFOAM case was developed</strong> to solve flow governing equations on the rocket and determine centre of pressure, rotational and translational acceleration, and bending forces on the rocket airframe.</p>
+                        <div class="project-tech">
+                            <span>OpenFOAM</span>
+                            <span>CFD</span>
+                            <span>ParaView</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/DaraSamii/SpaceConcordi-CR25" target="_blank">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card featured">
+                    <div class="project-image">
+                        <img src="assets/images/projects/thermalSpray.png" alt="Thermal Spray Simulation">
+                    </div>
+                    <div class="project-content">
+                        <span class="project-tag">Featured</span>
+                        <h3>Compressible Cold Spray Aeroacoustic Simulation</h3>
+                        <p>Developed compressible high-pressure, high-temperature solver with Lagrangian particle tracking (<strong>sonicDPMFoam</strong>) and DDES for simulating cold spray nozzle. Used libAcoustics and FW-H analogy to capture aeroacoustic noise generated by jet and track in-flight particles.</p>
+                        <div class="project-tech">
+                            <span>OpenFOAM</span>
+                            <span>DDES</span>
+                            <span>Aeroacoustics</span>
+                            <span>DPM</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/DaraSamii/sonicDPMFoam" target="_blank">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-image">
+                        <img src="assets/images/projects/rotameter.png" alt="Gas Rotameter">
+                    </div>
+                    <div class="project-content">
+                        <h3>Gas Rotameter Design with CFD</h3>
+                        <p>Transient ANSYS Fluent simulations with dynamic mesh; validated with experimental data for accurate flow measurement.</p>
+                        <div class="project-tech">
+                            <span>ANSYS Fluent</span>
+                            <span>Dynamic Mesh</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://drive.google.com/file/d/1TMjStpMq4fUrLZPLSXhLzo8hwkOlaZoR/view" target="_blank">
+                                <i class="fas fa-file-pdf"></i> Report
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-image">
+                        <img src="assets/images/projects/pid_ball.jpg" alt="PID Ball Balancer">
+                    </div>
+                    <div class="project-content">
+                        <h3>Arduino PID Ball Balancer</h3>
+                        <p>3D-printed PID system using Arduino Uno to balance a ping-pong ball with servo-controlled plate and position sensors.</p>
+                        <div class="project-tech">
+                            <span>Arduino</span>
+                            <span>C++</span>
+                            <span>3D Printing</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/DaraSamii/PID-ball-balance" target="_blank">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-image">
+                        <img src="assets/images/projects/ponchon.png" alt="py-distillation">
+                    </div>
+                    <div class="project-content">
+                        <h3>py-distillation</h3>
+                        <p>Python package for distillation tower calculations using Ponchon-Savarit and McCabe-Thiele methods with multiple configurations.</p>
+                        <div class="project-tech">
+                            <span>Python</span>
+                            <span>NumPy</span>
+                            <span>Matplotlib</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/DaraSamii/py-distillation" target="_blank">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-image white-bg">
+                        <img src="assets/images/projects/resnet.png" alt="A.I.ducation Analytics">
+                    </div>
+                    <div class="project-content">
+                        <h3>A.I.ducation Analytics</h3>
+                        <p>Face emotion recognition system using deep learning with FER2013 dataset; includes cross-validation and bias analysis.</p>
+                        <div class="project-tech">
+                            <span>PyTorch</span>
+                            <span>CNN</span>
+                            <span>Computer Vision</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/DaraSamii/A.I.ducation-Analytics" target="_blank">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="experience">
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            <div class="exp-grid">
+                <div class="exp-card">
+                    <div class="exp-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="exp-content">
+                        <h3>CFD Team Lead</h3>
+                        <p class="exp-company">SpaceConcordia, Solid Rocketry Team</p>
+                        <p class="exp-date">Dec 2024 — Present</p>
+                        <ul>
+                            <li>Led OpenFOAM simulations for CR25 rocket</li>
+                            <li>Aerodynamic forces, center of pressure, stability analysis</li>
+                            <li>Participated in manufacturing and Launch Canada 2025</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exp-card">
+                    <div class="exp-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div class="exp-content">
+                        <h3>Research Assistant & Teaching Assistant</h3>
+                        <p class="exp-company">Concordia University</p>
+                        <p class="exp-date">Sep 2023 — Present</p>
+                        <ul>
+                            <li>Research Assistant at Multiphase Thermal Learning Lab</li>
+                            <li>Tutorial Leader for C++, Arduino, Heat Transfer, Fluid Mechanics</li>
+                            <li>TA for Computational Fluid Dynamics (Aerospace)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exp-card">
+                    <div class="exp-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="exp-content">
+                        <h3>Remote Research Intern</h3>
+                        <p class="exp-company">JSPM Imperial College of Engineering</p>
+                        <p class="exp-date">Oct 2021 — Jan 2022</p>
+                        <ul>
+                            <li>Research on multiphase solvers in OpenFOAM</li>
+                            <li>International team collaboration</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exp-card">
+                    <div class="exp-icon">
+                        <i class="fas fa-battery-full"></i>
+                    </div>
+                    <div class="exp-content">
+                        <h3>Engineering Intern</h3>
+                        <p class="exp-company">Partian Battery</p>
+                        <p class="exp-date">Jun 2021 — Oct 2021</p>
+                        <ul>
+                            <li>Designed mixing system using COMSOL Multiphysics</li>
+                            <li>Developed simulation app with COMSOL AppBuilder</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Awards Section -->
+    <section id="awards" class="awards">
+        <div class="container">
+            <h2 class="section-title">Honors & Awards</h2>
+            <div class="awards-grid">
+                <div class="award-card">
+                    <div class="award-icon"><i class="fas fa-globe-americas"></i></div>
+                    <div class="award-content">
+                        <h3>Mitacs Global Research Award</h3>
+                        <p>CAD $6,000 for France-Canada research project</p>
+                        <span class="award-year">2025</span>
+                    </div>
+                </div>
+                <div class="award-card">
+                    <div class="award-icon"><i class="fas fa-award"></i></div>
+                    <div class="award-content">
+                        <h3>Concordia Merit Scholarship</h3>
+                        <p>CAD $5,000 for academic excellence</p>
+                        <span class="award-year">2023</span>
+                    </div>
+                </div>
+                <div class="award-card">
+                    <div class="award-icon"><i class="fas fa-trophy"></i></div>
+                    <div class="award-content">
+                        <h3>1st Place — Rahneshan National Competition</h3>
+                        <p>CFD modeling of particle crystallization (Team Lead)</p>
+                        <span class="award-year">2021</span>
+                    </div>
+                </div>
+                <div class="award-card">
+                    <div class="award-icon"><i class="fas fa-medal"></i></div>
+                    <div class="award-content">
+                        <h3>8th Place — Chemical Engineering Olympiad</h3>
+                        <p>27th National Chemical Engineering Olympiad</p>
+                        <span class="award-year">2022</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Let's Connect</h2>
+            <p class="contact-text">
+                I'm always interested in collaborating on CFD, ML, or rocketry projects!
+            </p>
+            <div class="contact-links">
+                <a href="mailto:dara.rahmatsamii@mail.concordia.ca" class="contact-card">
+                    <i class="fas fa-envelope"></i>
+                    <span>Email</span>
+                </a>
+                <a href="https://www.linkedin.com/in/dara-samii" target="_blank" class="contact-card">
+                    <i class="fab fa-linkedin-in"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://github.com/DaraSamii" target="_blank" class="contact-card">
+                    <i class="fab fa-github"></i>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Dara Rahmat Samii. Built with ☕ and curiosity.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
