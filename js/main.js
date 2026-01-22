@@ -207,6 +207,268 @@ document.querySelectorAll('.project-image img, .blog-image img, .friend-photo im
 });
 
 // ============================================
+// Project Slideshow Functionality
+// ============================================
+const SLIDESHOW_INTERVAL = 4000; // 4 seconds
+
+function initProjectSlideshows() {
+    const projectCards = document.querySelectorAll('.project-card[data-project]');
+    
+    projectCards.forEach(card => {
+        const slideshow = card.querySelector('.project-slideshow');
+        if (!slideshow) return;
+        
+        const container = slideshow.querySelector('.slideshow-container');
+        const images = container.querySelectorAll('.slideshow-image');
+        const prevBtn = slideshow.querySelector('.slideshow-prev');
+        const nextBtn = slideshow.querySelector('.slideshow-next');
+        const indicator = slideshow.querySelector('.slideshow-indicator');
+        
+        if (images.length <= 1) {
+            // Hide navigation if only one image
+            if (prevBtn) prevBtn.style.display = 'none';
+            if (nextBtn) nextBtn.style.display = 'none';
+            if (indicator) indicator.style.display = 'none';
+            return;
+        }
+        
+        let currentIndex = 0;
+        let slideshowInterval;
+        
+        function showImage(index) {
+            images.forEach((img, i) => {
+                img.classList.toggle('active', i === index);
+            });
+            currentIndex = index;
+            
+            // Update indicator
+            if (indicator) {
+                indicator.className = 'slideshow-indicator';
+                if (images.length > 1) {
+                    indicator.classList.add('active');
+                }
+            }
+        }
+        
+        function nextImage() {
+            const nextIndex = (currentIndex + 1) % images.length;
+            showImage(nextIndex);
+        }
+        
+        function prevImage() {
+            const prevIndex = (currentIndex - 1 + images.length) % images.length;
+            showImage(prevIndex);
+        }
+        
+        function startSlideshow() {
+            slideshowInterval = setInterval(nextImage, SLIDESHOW_INTERVAL);
+        }
+        
+        function stopSlideshow() {
+            if (slideshowInterval) {
+                clearInterval(slideshowInterval);
+            }
+        }
+        
+        // Navigation buttons
+        if (nextBtn) {
+            nextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                stopSlideshow();
+                nextImage();
+                startSlideshow();
+            });
+        }
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                stopSlideshow();
+                prevImage();
+                startSlideshow();
+            });
+        }
+        
+        // Pause on hover
+        slideshow.addEventListener('mouseenter', stopSlideshow);
+        slideshow.addEventListener('mouseleave', startSlideshow);
+        
+        // Start slideshow
+        startSlideshow();
+        
+        // Initialize first image
+        showImage(0);
+    });
+}
+
+// ============================================
+// Project Details Dropdown
+// ============================================
+function initProjectDetailsDropdowns() {
+    const toggles = document.querySelectorAll('.project-details-toggle');
+    
+    toggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const details = toggle.nextElementSibling;
+            const isActive = toggle.classList.contains('active');
+            
+            if (isActive) {
+                toggle.classList.remove('active');
+                details.classList.remove('active');
+                toggle.querySelector('.toggle-text').textContent = 'Show Details';
+            } else {
+                toggle.classList.add('active');
+                details.classList.add('active');
+                toggle.querySelector('.toggle-text').textContent = 'Hide Details';
+            }
+        });
+    });
+}
+
+// ============================================
+// Image Modal Functionality
+// ============================================
+let currentModalImages = [];
+let currentModalIndex = 0;
+
+function initImageModal() {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalClose = document.querySelector('.modal-close');
+    const modalPrev = document.querySelector('.modal-nav-prev');
+    const modalNext = document.querySelector('.modal-nav-next');
+    const modalCounter = document.getElementById('modalCounter');
+    
+    // Get all project images and make them clickable
+    const projectCards = document.querySelectorAll('.project-card[data-project]');
+    
+    projectCards.forEach(card => {
+        const slideshow = card.querySelector('.project-slideshow');
+        if (!slideshow) return;
+        
+        const images = slideshow.querySelectorAll('.slideshow-image');
+        
+        images.forEach((img, index) => {
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openModal(card, index);
+            });
+        });
+        
+        // Also make the container clickable
+        const container = slideshow.querySelector('.slideshow-container');
+        if (container) {
+            container.addEventListener('click', (e) => {
+                if (e.target === container || e.target.classList.contains('slideshow-container')) {
+                    const activeImg = slideshow.querySelector('.slideshow-image.active');
+                    if (activeImg) {
+                        const allImages = Array.from(images);
+                        const activeIndex = allImages.indexOf(activeImg);
+                        openModal(card, activeIndex);
+                    }
+                }
+            });
+        }
+    });
+    
+    function openModal(card, startIndex) {
+        const slideshow = card.querySelector('.project-slideshow');
+        if (!slideshow) return;
+        
+        const images = slideshow.querySelectorAll('.slideshow-image');
+        currentModalImages = Array.from(images).map(img => ({
+            src: img.src,
+            alt: img.alt
+        }));
+        
+        currentModalIndex = startIndex;
+        updateModalImage();
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    function updateModalImage() {
+        if (currentModalImages.length === 0) return;
+        
+        const image = currentModalImages[currentModalIndex];
+        modalImage.src = image.src;
+        modalImage.alt = image.alt;
+        modalCounter.textContent = `${currentModalIndex + 1} / ${currentModalImages.length}`;
+        
+        // Show/hide navigation buttons
+        if (modalPrev) {
+            modalPrev.style.display = currentModalImages.length > 1 ? 'flex' : 'none';
+        }
+        if (modalNext) {
+            modalNext.style.display = currentModalImages.length > 1 ? 'flex' : 'none';
+        }
+    }
+    
+    function nextModalImage() {
+        if (currentModalImages.length === 0) return;
+        currentModalIndex = (currentModalIndex + 1) % currentModalImages.length;
+        updateModalImage();
+    }
+    
+    function prevModalImage() {
+        if (currentModalImages.length === 0) return;
+        currentModalIndex = (currentModalIndex - 1 + currentModalImages.length) % currentModalImages.length;
+        updateModalImage();
+    }
+    
+    // Event listeners
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
+    
+    if (modalPrev) {
+        modalPrev.addEventListener('click', (e) => {
+            e.stopPropagation();
+            prevModalImage();
+        });
+    }
+    
+    if (modalNext) {
+        modalNext.addEventListener('click', (e) => {
+            e.stopPropagation();
+            nextModalImage();
+        });
+    }
+    
+    // Close on background click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (!modal.classList.contains('active')) return;
+        
+        if (e.key === 'Escape') {
+            closeModal();
+        } else if (e.key === 'ArrowLeft') {
+            prevModalImage();
+        } else if (e.key === 'ArrowRight') {
+            nextModalImage();
+        }
+    });
+}
+
+// Initialize on DOM load
+document.addEventListener('DOMContentLoaded', () => {
+    initProjectSlideshows();
+    initProjectDetailsDropdowns();
+    initImageModal();
+});
+
+// ============================================
 // Console Easter Egg
 // ============================================
 console.log('%c👋 Hey there, curious developer!', 'font-size: 20px; font-weight: bold;');

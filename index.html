@@ -29,6 +29,9 @@
                 <li><a href="#publications" class="nav-link">Publications</a></li>
                 <li><a href="#projects" class="nav-link">Projects</a></li>
                 <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="CV/cv.pdf" class="nav-link nav-link-cv" target="_blank">
+                    <i class="fas fa-file-pdf"></i> CV
+                </a></li>
                 <li><a href="pages/blog.html" class="nav-link">Blog</a></li>
                 <li><a href="pages/piano.html" class="nav-link">Piano</a></li>
                 <!-- <li><a href="friends.html" class="nav-link">Friends</a></li> -->
@@ -55,8 +58,8 @@
                     <span class="hero-title">Rocketeer</span>
                 </div>
                 <p class="hero-description">
-                    M.Sc. student at Concordia University bridging Computational Fluid Dynamics 
-                    with Machine Learning to accelerate simulations and unlock new insights in thermal spray coatings.
+                    M.Sc. student in Mechanical Engineering integrating machine learning with CFD for thermal spray coating analysis. 
+                    Delivered 100× speedup over traditional solvers using Graph Neural Networks; published in IEEE Access.
                 </p>
                 <div class="hero-cta">
                     <a href="#projects" class="btn btn-primary">View My Work</a>
@@ -119,16 +122,16 @@
             <div class="about-content">
                 <div class="about-text">
                     <p class="lead">
-                        I'm a Master's student in Mechanical Engineering with a background in Chemical Engineering, 
+                        I'm a Master's candidate in Mechanical Engineering with a background in Chemical Engineering, 
                         focused on integrating machine learning with computational fluid dynamics.
                     </p>
                     <p>
                         My research explores how Graph Neural Networks can accelerate CFD simulations, 
-                        achieving up to <strong>100× speedup</strong> over traditional solvers. I'm particularly 
-                        interested in thermal spray coating prediction using aeroacoustic signals.
+                        achieving <strong>100× speedup</strong> over traditional solvers. I execute RANS, DDES, and 
+                        aeroacoustic simulations on HPC clusters (400+ CPU cores, Compute Canada) for thermal spray coating analysis.
                     </p>
                     <p>
-                        Beyond research, I lead CFD simulations for SpaceConcordia's solid rocketry team 
+                        I lead CFD simulations for SpaceConcordia's solid rocketry team (CR25 and CR26 rockets) 
                         and hold an L2 rocketry certification from the Tripoli Rocketry Association.
                     </p>
                 </div>
@@ -148,16 +151,16 @@
                             <span class="skill-tag">Python</span>
                             <span class="skill-tag">C++</span>
                             <span class="skill-tag">MATLAB</span>
-                            <span class="skill-tag">Arduino</span>
+                            <span class="skill-tag">Bash</span>
                         </div>
                     </div>
                     <div class="skill-category">
                         <h3><i class="fas fa-brain"></i> ML/DL</h3>
                         <div class="skill-tags">
                             <span class="skill-tag">PyTorch</span>
-                            <span class="skill-tag">PyG</span>
+                            <span class="skill-tag">PyTorch Geometric</span>
                             <span class="skill-tag">scikit-learn</span>
-                            <span class="skill-tag">fast.ai</span>
+                            <span class="skill-tag">Optuna</span>
                         </div>
                     </div>
                     <div class="skill-category">
@@ -165,7 +168,7 @@
                         <div class="skill-tags">
                             <span class="skill-tag">Git</span>
                             <span class="skill-tag">Docker</span>
-                            <span class="skill-tag">Linux</span>
+                            <span class="skill-tag">Slurm</span>
                             <span class="skill-tag">LaTeX</span>
                         </div>
                     </div>
@@ -190,13 +193,13 @@
                                 <p class="location"><i class="fas fa-map-marker-alt"></i> Montréal, Canada</p>
                             </div>
                             <div class="edu-date">
-                                <span>2023 — 2025</span>
+                                <span>2023 — 2026</span>
                                 <span class="gpa-badge">GPA: 4.23/4.3</span>
                             </div>
                         </div>
                         <div class="edu-details">
                             <p><strong>Advisor:</strong> Prof. Moussa Tembely</p>
-                            <p><strong>Thesis:</strong> Machine Learning for Predicting Thermal Spray Coating Properties from Aeroacoustic Signals</p>
+                            <p><strong>Thesis:</strong> CFD Simulation of Cold Spray Process and Aeroacoustic-Based Particle Distribution Analysis</p>
                         </div>
                     </div>
                 </div>
@@ -238,7 +241,7 @@
                         </div>
                         <div class="edu-details">
                             <p><strong>Advisor:</strong> Prof. S.H. HashemAbadi</p>
-                            <p><strong>Thesis:</strong> Design and Manufacturing of a Gas Rotameter using CFD</p>
+                            <p><strong>Thesis:</strong> Design and Manufacturing of a Gas Rotameter Using CFD</p>
                         </div>
                     </div>
                 </div>
@@ -290,18 +293,29 @@
         <div class="container">
             <h2 class="section-title">Projects</h2>
             <div class="projects-grid">
-                <article class="project-card featured">
+                <article class="project-card featured" data-project="mesh-gnn">
                     <div class="project-image">
-                        <img src="assets/images/projects/meshGnn.png" alt="MeshGraphNet Project">
+                        <div class="project-slideshow">
+                            <button class="slideshow-nav slideshow-prev" aria-label="Previous image">‹</button>
+                            <div class="slideshow-container">
+                                <img src="assets/images/projects/mesh-gnn/meshGnn.png" alt="MeshGraphNet Project" class="slideshow-image active">
+                                <img src="assets/images/projects/mesh-gnn/meshgraphnet.gif" alt="MeshGraphNet Animation" class="slideshow-image">
+                                <img src="assets/images/projects/mesh-gnn/geom.png" alt="MeshGraphNet Geometry" class="slideshow-image">
+                                <img src="assets/images/projects/mesh-gnn/model.png" alt="MeshGraphNet Model" class="slideshow-image">
+                            </div>
+                            <button class="slideshow-nav slideshow-next" aria-label="Next image">›</button>
+                            <div class="slideshow-indicator"></div>
+                        </div>
                     </div>
                     <div class="project-content">
                         <span class="project-tag">Featured</span>
                         <h3>Mesh-Based GNN for CFD Acceleration</h3>
-                        <p>Achieved <strong>100× speedup</strong> over traditional solvers by converting OpenFOAM polyMesh to graph inputs and training Graph Neural Networks for thermal Homann flow prediction.</p>
+                        <p>Achieved <strong>100× speedup</strong> over traditional solvers by converting OpenFOAM polyMesh to graph inputs and training Graph Neural Networks for thermal Homann flow prediction. Published in IEEE Access.</p>
                         <div class="project-tech">
                             <span>PyTorch</span>
-                            <span>PyG</span>
+                            <span>PyTorch Geometric</span>
                             <span>OpenFOAM</span>
+                            <span>Optuna</span>
                         </div>
                         <div class="project-links">
                             <a href="https://github.com/DaraSamii/MeshGraphNet_Homann_results" target="_blank">
@@ -311,17 +325,35 @@
                                 <i class="fas fa-file-alt"></i> Paper
                             </a>
                         </div>
+                        <button class="project-details-toggle">
+                            <span class="toggle-text">Show Details</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="project-details">
+                            <p>Generated large-scale CFD dataset via parameterized CAD, meshing, and OpenFOAM simulation. Converted <code>polyMesh</code> to graph inputs; tuned GNN architectures with Optuna. Achieved <strong>100× speedup</strong> over traditional solvers; published in IEEE Access.</p>
+                        </div>
                     </div>
                 </article>
 
-                <article class="project-card featured">
+                <article class="project-card featured" data-project="cr25-cfd">
                     <div class="project-image">
-                        <img src="assets/images/projects/CR25_mach.png" alt="CR25 Mach Analysis">
+                        <div class="project-slideshow">
+                            <button class="slideshow-nav slideshow-prev" aria-label="Previous image">‹</button>
+                            <div class="slideshow-container">
+                                <img src="assets/images/projects/cr25-cfd/CR25_mach.png" alt="CR25 Mach Analysis" class="slideshow-image active">
+                                <img src="assets/images/projects/cr25-cfd/CR25_pressure.png" alt="CR25 Pressure Analysis" class="slideshow-image">
+                                <img src="assets/images/projects/cr25-cfd/Forces.png" alt="CR25 Forces" class="slideshow-image">
+                                <img src="assets/images/projects/cr25-cfd/Valid.png" alt="CR25 Validation" class="slideshow-image">
+                                <img src="assets/images/projects/cr25-cfd/mesh.png" alt="CR25 Mesh" class="slideshow-image">
+                            </div>
+                            <button class="slideshow-nav slideshow-next" aria-label="Next image">›</button>
+                            <div class="slideshow-indicator"></div>
+                        </div>
                     </div>
                     <div class="project-content">
                         <span class="project-tag">Featured</span>
-                        <h3>SpaceConcordia CR25 "Aether" CFD Analysis</h3>
-                        <p>CR25 "Aether" was SpaceConcordia's 2025 rocket with a unique transition design. Due to its unconventional shape, classic equations and load analysis weren't applicable, so an <strong>OpenFOAM case was developed</strong> to solve flow governing equations on the rocket and determine centre of pressure, rotational and translational acceleration, and bending forces on the rocket airframe.</p>
+                        <h3>SpaceConcordia CR25 CFD Analysis</h3>
+                        <p>Executed OpenFOAM aerodynamics simulations for CR25. Computed drag, lift, center of pressure, stability, thermal loads, and bending moments across Mach 0.8–2.5 and AoA ±5°.</p>
                         <div class="project-tech">
                             <span>OpenFOAM</span>
                             <span>CFD</span>
@@ -332,17 +364,36 @@
                                 <i class="fab fa-github"></i> GitHub
                             </a>
                         </div>
+                        <button class="project-details-toggle">
+                            <span class="toggle-text">Show Details</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="project-details">
+                            <p>Performed Richardson extrapolation for mesh sensitivity; implemented multi-step <code>fvSchemes</code> (upwind → linearUpwind). Simplified geometries and 3D-printed test articles; validated against experimental data. Collaborated with Flight Performance and Structures teams; delivered PDR documentation for CR26.</p>
+                        </div>
                     </div>
                 </article>
 
-                <article class="project-card featured">
+                <article class="project-card featured" data-project="thermal-spray">
                     <div class="project-image">
-                        <img src="assets/images/projects/thermalSpray.png" alt="Thermal Spray Simulation">
+                        <div class="project-slideshow">
+                            <button class="slideshow-nav slideshow-prev" aria-label="Previous image">‹</button>
+                            <div class="slideshow-container">
+                                <img src="assets/images/projects/thermal-spray/thermalSpray.png" alt="Thermal Spray Simulation" class="slideshow-image active">
+                                <img src="assets/images/projects/thermal-spray/DDES.gif" alt="Thermal Spray DDES" class="slideshow-image">
+                                <img src="assets/images/projects/thermal-spray/Mach.png" alt="Thermal Spray Mach" class="slideshow-image">
+                                <img src="assets/images/projects/thermal-spray/mesh.png" alt="Thermal Spray Mesh" class="slideshow-image">
+                                <img src="assets/images/projects/thermal-spray/meshSens.png" alt="Thermal Spray Mesh Sensitivity" class="slideshow-image">
+                                <img src="assets/images/projects/thermal-spray/particles.png" alt="Thermal Spray Particles" class="slideshow-image">
+                            </div>
+                            <button class="slideshow-nav slideshow-next" aria-label="Next image">›</button>
+                            <div class="slideshow-indicator"></div>
+                        </div>
                     </div>
                     <div class="project-content">
                         <span class="project-tag">Featured</span>
-                        <h3>Compressible Cold Spray Aeroacoustic Simulation</h3>
-                        <p>Developed compressible high-pressure, high-temperature solver with Lagrangian particle tracking (<strong>sonicDPMFoam</strong>) and DDES for simulating cold spray nozzle. Used libAcoustics and FW-H analogy to capture aeroacoustic noise generated by jet and track in-flight particles.</p>
+                        <h3>Aeroacoustic CFD Simulation of Cold Spray (Thesis)</h3>
+                        <p>Extended <code>sonicFoam</code> to <code>sonicDPMFoam</code> with Lagrangian particle tracking. Executed RANS → DDES workflows; verified turbulence via Kolmogorov cascade; applied FW-H (libAcoustics) for aeroacoustics.</p>
                         <div class="project-tech">
                             <span>OpenFOAM</span>
                             <span>DDES</span>
@@ -354,35 +405,64 @@
                                 <i class="fab fa-github"></i> GitHub
                             </a>
                         </div>
+                        <button class="project-details-toggle">
+                            <span class="toggle-text">Show Details</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="project-details">
+                            <p>Simulated cold spray process at 35–65 bar and 707–807 K. Developed analytical model for preliminary aeroacoustic analysis. Validated particle–shock interaction and acoustic predictions against literature benchmarks. Processed results with Python/PyVista; managed jobs on Compute Canada HPC (400+ cores).</p>
+                        </div>
                     </div>
                 </article>
 
-                <article class="project-card">
+                <article class="project-card" data-project="rotameter">
                     <div class="project-image">
-                        <img src="assets/images/projects/rotameter.png" alt="Gas Rotameter">
+                        <div class="project-slideshow">
+                            <button class="slideshow-nav slideshow-prev" aria-label="Previous image">‹</button>
+                            <div class="slideshow-container">
+                                <img src="assets/images/projects/rotameter/rotameter.png" alt="Gas Rotameter" class="slideshow-image active">
+                                <img src="assets/images/projects/rotameter/mesh.png" alt="Rotameter Mesh" class="slideshow-image">
+                            </div>
+                            <button class="slideshow-nav slideshow-next" aria-label="Next image">›</button>
+                            <div class="slideshow-indicator"></div>
+                        </div>
                     </div>
                     <div class="project-content">
                         <h3>Gas Rotameter Design with CFD</h3>
-                        <p>Transient ANSYS Fluent simulations with dynamic mesh; validated with experimental data for accurate flow measurement.</p>
+                        <p>Performed transient ANSYS Fluent simulations with dynamic mesh; validated against experimental data. Published in Flow Measurement and Instrumentation.</p>
                         <div class="project-tech">
                             <span>ANSYS Fluent</span>
                             <span>Dynamic Mesh</span>
                         </div>
                         <div class="project-links">
                             <a href="https://doi.org/10.1016/j.flowmeasinst.2023.102513" target="_blank">
-                                <i class="fas fa-file-pdf"></i> Report
+                                <i class="fas fa-file-pdf"></i> Paper
                             </a>
+                        </div>
+                        <button class="project-details-toggle">
+                            <span class="toggle-text">Show Details</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="project-details">
+                            <p>Compared triangular vs. quadratic mesh deformation schemes. This was part of my B.Sc. thesis work at Iran University of Science and Technology.</p>
                         </div>
                     </div>
                 </article>
 
-                <article class="project-card">
+                <article class="project-card" data-project="pid-ball">
                     <div class="project-image">
-                        <img src="assets/images/projects/pid_ball.jpg" alt="PID Ball Balancer">
+                        <div class="project-slideshow">
+                            <button class="slideshow-nav slideshow-prev" aria-label="Previous image">‹</button>
+                            <div class="slideshow-container">
+                                <img src="assets/images/projects/pid-ball/pid_ball.jpg" alt="PID Ball Balancer" class="slideshow-image active">
+                            </div>
+                            <button class="slideshow-nav slideshow-next" aria-label="Next image">›</button>
+                            <div class="slideshow-indicator"></div>
+                        </div>
                     </div>
                     <div class="project-content">
                         <h3>Arduino PID Ball Balancer</h3>
-                        <p>3D-printed PID system using Arduino Uno to balance a ping-pong ball with servo-controlled plate and position sensors.</p>
+                        <p>Built 3D-printed PID control system using Arduino Uno; tuned PID gains for ping-pong ball stabilization with ultrasonic sensors and servo-controlled plate.</p>
                         <div class="project-tech">
                             <span>Arduino</span>
                             <span>C++</span>
@@ -393,12 +473,27 @@
                                 <i class="fab fa-github"></i> GitHub
                             </a>
                         </div>
+                        <button class="project-details-toggle">
+                            <span class="toggle-text">Show Details</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="project-details">
+                            <p>Demonstrates practical control systems implementation with custom 3D-printed parts.</p>
+                        </div>
                     </div>
                 </article>
 
-                <article class="project-card">
+                <article class="project-card" data-project="py-distillation">
                     <div class="project-image">
-                        <img src="assets/images/projects/ponchon.png" alt="py-distillation">
+                        <div class="project-slideshow">
+                            <button class="slideshow-nav slideshow-prev" aria-label="Previous image">‹</button>
+                            <div class="slideshow-container">
+                                <img src="assets/images/projects/py-distillation/ponchon.png" alt="py-distillation" class="slideshow-image active">
+                                <img src="assets/images/projects/py-distillation/MC.png" alt="py-distillation McCabe-Thiele" class="slideshow-image">
+                            </div>
+                            <button class="slideshow-nav slideshow-next" aria-label="Next image">›</button>
+                            <div class="slideshow-indicator"></div>
+                        </div>
                     </div>
                     <div class="project-content">
                         <h3>py-distillation</h3>
@@ -413,16 +508,30 @@
                                 <i class="fab fa-github"></i> GitHub
                             </a>
                         </div>
+                        <button class="project-details-toggle">
+                            <span class="toggle-text">Show Details</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="project-details">
+                            <p>Supports open-steam, multiple-feed, and side-stream configurations. Useful for chemical engineering process design and simulation.</p>
+                        </div>
                     </div>
                 </article>
 
-                <article class="project-card">
+                <article class="project-card" data-project="ai-ducation">
                     <div class="project-image white-bg">
-                        <img src="assets/images/projects/resnet.png" alt="A.I.ducation Analytics">
+                        <div class="project-slideshow">
+                            <button class="slideshow-nav slideshow-prev" aria-label="Previous image">‹</button>
+                            <div class="slideshow-container">
+                                <img src="assets/images/projects/ai-ducation/resnet.png" alt="A.I.ducation Analytics" class="slideshow-image active">
+                            </div>
+                            <button class="slideshow-nav slideshow-next" aria-label="Next image">›</button>
+                            <div class="slideshow-indicator"></div>
+                        </div>
                     </div>
                     <div class="project-content">
                         <h3>A.I.ducation Analytics</h3>
-                        <p>Face emotion recognition system using deep learning with FER2013 dataset; includes cross-validation and bias analysis.</p>
+                        <p>Merged FER2013 & FER+ datasets; implemented face emotion recognition CNNs. Conducted cross-validation and bias analysis by gender and age.</p>
                         <div class="project-tech">
                             <span>PyTorch</span>
                             <span>CNN</span>
@@ -432,6 +541,13 @@
                             <a href="https://github.com/DaraSamii/A.I.ducation-Analytics" target="_blank">
                                 <i class="fab fa-github"></i> GitHub
                             </a>
+                        </div>
+                        <button class="project-details-toggle">
+                            <span class="toggle-text">Show Details</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="project-details">
+                            <p>This project explores the intersection of AI and education technology through facial emotion recognition.</p>
                         </div>
                     </div>
                 </article>
@@ -453,9 +569,10 @@
                         <p class="exp-company">SpaceConcordia, Solid Rocketry Team</p>
                         <p class="exp-date">Dec 2024 — Present</p>
                         <ul>
-                            <li>Led OpenFOAM simulations for CR25 rocket</li>
-                            <li>Aerodynamic forces, center of pressure, stability analysis</li>
-                            <li>Participated in manufacturing and Launch Canada 2025</li>
+                            <li>Executed OpenFOAM simulations for CR25 and CR26 (Icarus & Daedalus)</li>
+                            <li>Computed drag, lift, CoP, stability, thermal loads across Mach 0.8–2.5</li>
+                            <li>Performed Richardson extrapolation; validated against experimental data</li>
+                            <li>Contributed to manufacturing and Launch Canada 2025 operations</li>
                         </ul>
                     </div>
                 </div>
@@ -469,9 +586,10 @@
                         <p class="exp-company">Concordia University</p>
                         <p class="exp-date">Sep 2023 — Present</p>
                         <ul>
-                            <li>Research Assistant at Multiphase Thermal Learning Lab</li>
-                            <li>Tutorial Leader for C++, Arduino, Heat Transfer, Fluid Mechanics</li>
-                            <li>TA for Computational Fluid Dynamics (Aerospace)</li>
+                            <li>Research Assistant at Multiphase Thermofluid Learning Lab</li>
+                            <li>Executed RANS → DDES workflows on HPC (400+ cores)</li>
+                            <li>Extended sonicFoam to sonicDPMFoam with Lagrangian tracking</li>
+                            <li>Accumulated 1,200+ TA hours: Fluid Mechanics, Heat Transfer, CFD</li>
                         </ul>
                     </div>
                 </div>
@@ -485,8 +603,8 @@
                         <p class="exp-company">JSPM Imperial College of Engineering</p>
                         <p class="exp-date">Oct 2021 — Jan 2022</p>
                         <ul>
-                            <li>Research on multiphase solvers in OpenFOAM</li>
-                            <li>International team collaboration</li>
+                            <li>Investigated multiphase solvers in OpenFOAM</li>
+                            <li>Collaborated with international research team on solver benchmarking</li>
                         </ul>
                     </div>
                 </div>
@@ -501,7 +619,7 @@
                         <p class="exp-date">Jun 2021 — Oct 2021</p>
                         <ul>
                             <li>Designed mixing system using COMSOL Multiphysics</li>
-                            <li>Developed simulation app with COMSOL AppBuilder</li>
+                            <li>Developed parametric simulation app with COMSOL Application Builder</li>
                         </ul>
                     </div>
                 </div>
@@ -517,8 +635,8 @@
                 <div class="award-card">
                     <div class="award-icon"><i class="fas fa-globe-americas"></i></div>
                     <div class="award-content">
-                        <h3>Mitacs Global Research Award</h3>
-                        <p>CAD $6,000 for France-Canada research project</p>
+                        <h3>Mitacs Globalink Research Award</h3>
+                        <p>CAD $6,000 for international research collaboration (France–Canada)</p>
                         <span class="award-year">2025</span>
                     </div>
                 </div>
@@ -542,8 +660,83 @@
                     <div class="award-icon"><i class="fas fa-medal"></i></div>
                     <div class="award-content">
                         <h3>8th Place — Chemical Engineering Olympiad</h3>
-                        <p>27th National Chemical Engineering Olympiad</p>
+                        <p>27th National Chemical Engineering Olympiad (Iran)</p>
                         <span class="award-year">2022</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certifications" class="certifications">
+        <div class="container">
+            <h2 class="section-title">Certifications</h2>
+            <div class="certifications-grid">
+                <div class="cert-card">
+                    <div class="cert-icon"><i class="fas fa-rocket"></i></div>
+                    <div class="cert-content">
+                        <h3>L2 Rocketry Certificate</h3>
+                        <p class="cert-org">Tripoli Rocketry Association</p>
+                        <span class="cert-date">Oct 2025</span>
+                    </div>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-icon"><i class="fas fa-rocket"></i></div>
+                    <div class="cert-content">
+                        <h3>L1 Rocketry Certificate</h3>
+                        <p class="cert-org">Tripoli Rocketry Association</p>
+                        <span class="cert-date">May 2025</span>
+                    </div>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-icon"><i class="fas fa-brain"></i></div>
+                    <div class="cert-content">
+                        <h3>Machine Learning</h3>
+                        <p class="cert-org">Stanford Online</p>
+                        <a href="https://www.coursera.org/account/accomplishments/certificate/38UU5AV64VLG" target="_blank" class="cert-link">
+                            <i class="fas fa-external-link-alt"></i> View Credential
+                        </a>
+                    </div>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-icon"><i class="fas fa-network-wired"></i></div>
+                    <div class="cert-content">
+                        <h3>Deep Learning Specialization</h3>
+                        <p class="cert-org">DeepLearning.AI</p>
+                        <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/L3XB7S5DBMVY" target="_blank" class="cert-link">
+                            <i class="fas fa-external-link-alt"></i> View Credential
+                        </a>
+                    </div>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-icon"><i class="fas fa-robot"></i></div>
+                    <div class="cert-content">
+                        <h3>Fundamentals of Reinforcement Learning</h3>
+                        <p class="cert-org">University of Alberta</p>
+                        <a href="https://www.coursera.org/account/accomplishments/certificate/BYSCEMT3P6UD" target="_blank" class="cert-link">
+                            <i class="fas fa-external-link-alt"></i> View Credential
+                        </a>
+                    </div>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-icon"><i class="fas fa-chess"></i></div>
+                    <div class="cert-content">
+                        <h3>Game Theory</h3>
+                        <p class="cert-org">Stanford & UBC</p>
+                        <a href="https://www.coursera.org/account/accomplishments/verify/MW46ANCDCZM7" target="_blank" class="cert-link">
+                            <i class="fas fa-external-link-alt"></i> View Credential
+                        </a>
+                    </div>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-icon"><i class="fas fa-microchip"></i></div>
+                    <div class="cert-content">
+                        <h3>From Nand to Tetris</h3>
+                        <p class="cert-org">Hebrew University of Jerusalem</p>
+                        <a href="https://coursera.org/share/08d088ec9315828c1b1836a717962446" target="_blank" class="cert-link">
+                            <i class="fas fa-external-link-alt"></i> View Credential
+                        </a>
                     </div>
                 </div>
             </div>
@@ -580,6 +773,21 @@
             <p>&copy; 2025 Dara Rahmat Samii. Built with ☕ and curiosity.</p>
         </div>
     </footer>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal">
+        <div class="modal-content-wrapper">
+            <span class="modal-close">&times;</span>
+            <button class="modal-nav modal-nav-prev" aria-label="Previous image">‹</button>
+            <div class="modal-image-container">
+                <img id="modalImage" class="modal-image" src="" alt="Project Image">
+            </div>
+            <button class="modal-nav modal-nav-next" aria-label="Next image">›</button>
+            <div class="modal-counter">
+                <span id="modalCounter">1 / 1</span>
+            </div>
+        </div>
+    </div>
 
     <script src="js/main.js"></script>
 </body>
