@@ -293,11 +293,13 @@ function initProjectSlideshows() {
         slideshow.addEventListener('mouseenter', stopSlideshow);
         slideshow.addEventListener('mouseleave', startSlideshow);
         
-        // Start slideshow
-        startSlideshow();
-        
-        // Initialize first image
+        // Initialize first image immediately
         showImage(0);
+        
+        // Start slideshow after a short delay to ensure DOM is ready
+        setTimeout(() => {
+            startSlideshow();
+        }, 100);
     });
 }
 
@@ -462,11 +464,23 @@ function initImageModal() {
 }
 
 // Initialize on DOM load
-document.addEventListener('DOMContentLoaded', () => {
-    initProjectSlideshows();
-    initProjectDetailsDropdowns();
-    initImageModal();
-});
+function initializeAll() {
+    try {
+        initProjectSlideshows();
+        initProjectDetailsDropdowns();
+        initImageModal();
+    } catch (error) {
+        console.error('Error initializing:', error);
+    }
+}
+
+// Run when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeAll);
+} else {
+    // DOM is already ready
+    initializeAll();
+}
 
 // ============================================
 // Console Easter Egg
