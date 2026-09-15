@@ -1682,21 +1682,6 @@ body.world-page {
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
 }
 
-.world-overlay-stats {
-    top: calc(70px + var(--space-md));
-    left: 50%;
-    transform: translateX(-50%);
-    padding: var(--space-sm) var(--space-lg);
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-    white-space: nowrap;
-}
-
-.world-overlay-stats strong {
-    color: var(--color-accent);
-}
-
 .world-overlay-panel {
     top: calc(70px + var(--space-md));
     right: var(--space-lg);
@@ -1784,12 +1769,6 @@ body.world-page {
 .leaflet-control-attribution a { color: var(--color-primary-light) !important; }
 
 @media (max-width: 768px) {
-    .world-overlay-stats {
-        top: auto;
-        bottom: var(--space-md);
-        font-size: 0.8rem;
-        padding: var(--space-xs) var(--space-md);
-    }
     .world-overlay-panel {
         top: calc(70px + var(--space-sm));
         left: var(--space-sm);

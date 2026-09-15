@@ -36,8 +36,6 @@
     <div class="world-fullscreen">
         <div id="worldMap" class="world-map"></div>
 
-        <div class="world-overlay world-overlay-stats" id="worldStats">Loading travel data&hellip;</div>
-
         <div class="world-overlay world-overlay-panel" id="worldPanel">
             <div class="world-panel-placeholder">
                 <i class="fas fa-map-marked-alt"></i>
@@ -58,17 +56,14 @@
         const CARTO_API_KEY = 'cb1_3lc4_1_907495f80883d53c170de6da';
 
         // ============================================
-        // Travel data — edit this array to add trips.
-        // countryCode must be the ISO 3166-1 alpha-3 code
-        // (matches the ADM0_A3 property in the bundled
-        // assets/data/countries-110m.geojson file).
+        // Travel data lives in assets/data/travels.json —
+        // edit that file to add trips. Each entry needs:
+        // city, country, countryCode (ISO 3166-1 alpha-3,
+        // matching the ADM0_A3 property in the bundled
+        // countries-110m.geojson), lat, lng, and optional
+        // year / notes.
         // ============================================
-        const TRAVELS = [
-            { city: "Montreal", country: "Canada", countryCode: "CAN", lat: 45.5017, lng: -73.5673, year: 2022, notes: "Home base for grad school" },
-            { city: "Toronto",  country: "Canada", countryCode: "CAN", lat: 43.6532, lng: -79.3832, year: 2023, notes: "" },
-            { city: "Tehran",   country: "Iran",   countryCode: "IRN", lat: 35.6892, lng: 51.3890,  year: 2019, notes: "Hometown" }
-        ];
-
+        const TRAVELS_URL = '../assets/data/travels.json';
         const COUNTRIES_GEOJSON_URL = '../assets/data/countries-110m.geojson';
 
         const rootStyle = getComputedStyle(document.documentElement);
@@ -77,19 +72,11 @@
         const COLOR_MARKER = rootStyle.getPropertyValue('--color-accent').trim() || '#f59e0b';
         const COLOR_MARKER_BORDER = rootStyle.getPropertyValue('--color-bg').trim() || '#0a0a0f';
 
-        function renderStats() {
-            const statsEl = document.getElementById('worldStats');
-            if (!statsEl) return;
-            const countries = new Set(TRAVELS.map(t => t.countryCode));
-            const cities = new Set(TRAVELS.map(t => `${t.city}|${t.countryCode}`));
-            statsEl.innerHTML = `<strong>${countries.size}</strong> countries &middot; <strong>${cities.size}</strong> cities visited`;
-        }
-
-        function showCountryPanel(countryName, countryCode) {
+        function showCountryPanel(travels, countryName, countryCode) {
             const panel = document.getElementById('worldPanel');
             if (!panel) return;
 
-            const cities = TRAVELS.filter(t => t.countryCode === countryCode);
+            const cities = travels.filter(t => t.countryCode === countryCode);
             if (cities.length === 0) {
                 panel.innerHTML = `
                     <div class="world-panel-placeholder">
@@ -111,20 +98,17 @@
             panel.innerHTML = `<h3>${countryName}</h3><ul class="world-city-list">${items}</ul>`;
         }
 
-        function initWorldMap() {
+        function initWorldMap(TRAVELS) {
             const mapEl = document.getElementById('worldMap');
             if (!mapEl || typeof L === 'undefined') return;
 
             const map = L.map(mapEl, {
                 worldCopyJump: true,
                 minZoom: 2,
-                maxBoundsViscosity: 1.0,
                 zoomControl: true
             }).setView([20, 10], 2);
 
-            map.setMaxBounds([[-85, -180], [85, 180]]);
-
-            L.tileLayer(`https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`, {
+            L.tileLayer(`https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`, {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
                 subdomains: 'abcd',
                 maxZoom: 20
@@ -150,7 +134,7 @@
                                 mouseover: () => layer.setStyle({ fillOpacity: 0.6, weight: 2, color: COLOR_VISITED_HOVER }),
                                 mouseout: () => layer.setStyle({ fillOpacity: 0.35, weight: 1.5, color: COLOR_VISITED }),
                                 click: () => {
-                                    showCountryPanel(name, code);
+                                    showCountryPanel(TRAVELS, name, code);
                                     map.fitBounds(layer.getBounds(), { maxZoom: 5 });
                                 }
                             });
@@ -175,18 +159,26 @@
                     ${t.notes ? `<br>${t.notes}` : ''}
                 `);
 
-                marker.on('click', () => showCountryPanel(t.country, t.countryCode));
+                marker.on('click', () => showCountryPanel(TRAVELS, t.country, t.countryCode));
             });
 
             window.addEventListener('resize', () => map.invalidateSize());
         }
 
-        renderStats();
+        function boot() {
+            fetch(TRAVELS_URL)
+                .then(res => res.json())
+                .then(travels => initWorldMap(travels))
+                .catch(err => {
+                    console.error('World map: could not load travel data:', err);
+                    initWorldMap([]);
+                });
+        }
 
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initWorldMap);
+            document.addEventListener('DOMContentLoaded', boot);
         } else {
-            initWorldMap();
+            boot();
         }
     })();
     </script>
