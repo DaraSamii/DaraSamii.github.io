@@ -1672,75 +1672,17 @@ body.world-page {
     background: var(--color-bg-tertiary);
 }
 
-.world-overlay {
-    position: absolute;
-    z-index: 500;
-    background: rgba(10, 10, 15, 0.85);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+/* Leaflet's default zoom control sits top-left, which the fixed navbar
+   would otherwise cover — moved to bottom-left in JS (L.control.zoom
+   with position: 'bottomleft'); this just styles it to match the theme. */
+.leaflet-control-zoom a {
+    background: rgba(10, 10, 15, 0.85) !important;
+    color: var(--color-text) !important;
+    border-color: var(--color-border) !important;
 }
 
-.world-overlay-panel {
-    top: calc(70px + var(--space-md));
-    right: var(--space-lg);
-    width: 300px;
-    max-height: calc(100vh - 70px - (var(--space-lg) * 2));
-    overflow-y: auto;
-    padding: var(--space-lg);
-}
-
-.world-panel-placeholder {
-    min-height: 160px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: var(--space-md);
-    color: var(--color-text-muted);
-}
-
-.world-panel-placeholder i {
-    font-size: 2rem;
-    opacity: 0.4;
-}
-
-.world-panel h3 {
-    margin-bottom: var(--space-md);
-    color: var(--color-text);
-}
-
-.world-city-list li {
-    padding: var(--space-sm) 0;
-    border-bottom: 1px solid var(--color-border);
-}
-
-.world-city-list li:last-child { border-bottom: none; }
-
-.world-city-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: var(--space-sm);
-}
-
-.world-city-name {
-    font-weight: 600;
-    color: var(--color-text);
-}
-
-.world-city-year {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--color-primary-light);
-}
-
-.world-city-notes {
-    color: var(--color-text-muted);
-    font-size: 0.9rem;
-    margin-top: var(--space-xs);
+.leaflet-control-zoom a:hover {
+    background: var(--color-bg-tertiary) !important;
 }
 
 /* Leaflet popup/attribution theming to match the dark site */
@@ -1767,16 +1709,6 @@ body.world-page {
 }
 
 .leaflet-control-attribution a { color: var(--color-primary-light) !important; }
-
-@media (max-width: 768px) {
-    .world-overlay-panel {
-        top: calc(70px + var(--space-sm));
-        left: var(--space-sm);
-        right: var(--space-sm);
-        width: auto;
-        max-height: 40vh;
-    }
-}
 
 /* RTL Support for Persian Blog Posts */
 .rtl {

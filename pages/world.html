@@ -35,13 +35,6 @@
 
     <div class="world-fullscreen">
         <div id="worldMap" class="world-map"></div>
-
-        <div class="world-overlay world-overlay-panel" id="worldPanel">
-            <div class="world-panel-placeholder">
-                <i class="fas fa-map-marked-alt"></i>
-                <p>Click a highlighted country to see the cities I visited there.</p>
-            </div>
-        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -49,54 +42,15 @@
     <script>
     (function () {
         // ============================================
-        // CARTO now requires a (free) API key for its basemap
-        // tiles. Get one at https://carto.com/basemaps/apikey/
-        // and paste it below.
-        // ============================================
-        const CARTO_API_KEY = 'cb1_3lc4_1_907495f80883d53c170de6da';
-
-        // ============================================
         // Travel data lives in assets/data/travels.json —
         // edit that file to add trips. Each entry needs:
-        // city, country, countryCode (ISO 3166-1 alpha-3,
-        // matching the ADM0_A3 property in the bundled
-        // countries-110m.geojson), lat, lng, and optional
-        // year / notes.
+        // city, country, lat, lng, and optional year / notes.
         // ============================================
         const TRAVELS_URL = '../assets/data/travels.json';
-        const COUNTRIES_GEOJSON_URL = '../assets/data/countries-110m.geojson';
 
         const rootStyle = getComputedStyle(document.documentElement);
-        const COLOR_VISITED = rootStyle.getPropertyValue('--color-success').trim() || '#10b981';
-        const COLOR_VISITED_HOVER = rootStyle.getPropertyValue('--color-primary-light').trim() || '#818cf8';
         const COLOR_MARKER = rootStyle.getPropertyValue('--color-accent').trim() || '#f59e0b';
         const COLOR_MARKER_BORDER = rootStyle.getPropertyValue('--color-bg').trim() || '#0a0a0f';
-
-        function showCountryPanel(travels, countryName, countryCode) {
-            const panel = document.getElementById('worldPanel');
-            if (!panel) return;
-
-            const cities = travels.filter(t => t.countryCode === countryCode);
-            if (cities.length === 0) {
-                panel.innerHTML = `
-                    <div class="world-panel-placeholder">
-                        <i class="fas fa-map-marked-alt"></i>
-                        <p>No visits logged yet for ${countryName}.</p>
-                    </div>`;
-                return;
-            }
-
-            const items = cities.map(c => `
-                <li>
-                    <div class="world-city-header">
-                        <span class="world-city-name">${c.city}</span>
-                        ${c.year ? `<span class="world-city-year">${c.year}</span>` : ''}
-                    </div>
-                    ${c.notes ? `<p class="world-city-notes">${c.notes}</p>` : ''}
-                </li>`).join('');
-
-            panel.innerHTML = `<h3>${countryName}</h3><ul class="world-city-list">${items}</ul>`;
-        }
 
         function initWorldMap(TRAVELS) {
             const mapEl = document.getElementById('worldMap');
@@ -105,45 +59,29 @@
             const map = L.map(mapEl, {
                 worldCopyJump: true,
                 minZoom: 2,
-                zoomControl: true
+                maxBoundsViscosity: 1.0,
+                zoomControl: false
             }).setView([20, 10], 2);
 
-            L.tileLayer(`https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`, {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-                subdomains: 'abcd',
-                maxZoom: 20
+            // Restrict vertical dragging to where map tiles actually exist
+            // (Web Mercator projection stops rendering past ~85.06°) so you
+            // can't drag into the blank gray area past the poles. Longitude
+            // is left unbounded (Infinity) so it doesn't fight worldCopyJump's
+            // seamless east-west wrap — bounding both axes made panning feel stuck.
+            map.setMaxBounds(L.latLngBounds(
+                L.latLng(-85.06, -Infinity),
+                L.latLng(85.06, Infinity)
+            ));
+
+            // Default Leaflet zoom control sits top-left, which the fixed
+            // navbar would otherwise sit on top of — moved to bottom-left.
+            L.control.zoom({ position: 'bottomleft' }).addTo(map);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                subdomains: 'abc',
+                maxZoom: 19
             }).addTo(map);
-
-            const visitedCodes = new Set(TRAVELS.map(t => t.countryCode));
-
-            fetch(COUNTRIES_GEOJSON_URL)
-                .then(res => res.json())
-                .then(geojson => {
-                    L.geoJSON(geojson, {
-                        filter: feature => visitedCodes.has(feature.properties.ADM0_A3),
-                        style: {
-                            color: COLOR_VISITED,
-                            weight: 1.5,
-                            fillColor: COLOR_VISITED,
-                            fillOpacity: 0.35
-                        },
-                        onEachFeature: (feature, layer) => {
-                            const name = feature.properties.NAME;
-                            const code = feature.properties.ADM0_A3;
-                            layer.on({
-                                mouseover: () => layer.setStyle({ fillOpacity: 0.6, weight: 2, color: COLOR_VISITED_HOVER }),
-                                mouseout: () => layer.setStyle({ fillOpacity: 0.35, weight: 1.5, color: COLOR_VISITED }),
-                                click: () => {
-                                    showCountryPanel(TRAVELS, name, code);
-                                    map.fitBounds(layer.getBounds(), { maxZoom: 5 });
-                                }
-                            });
-                        }
-                    }).addTo(map);
-                })
-                .catch(err => {
-                    console.error('World map: could not load country borders:', err);
-                });
 
             TRAVELS.forEach(t => {
                 const marker = L.circleMarker([t.lat, t.lng], {
@@ -158,8 +96,6 @@
                     <strong>${t.city}</strong>, ${t.country}${t.year ? ` &middot; ${t.year}` : ''}
                     ${t.notes ? `<br>${t.notes}` : ''}
                 `);
-
-                marker.on('click', () => showCountryPanel(TRAVELS, t.country, t.countryCode));
             });
 
             window.addEventListener('resize', () => map.invalidateSize());
