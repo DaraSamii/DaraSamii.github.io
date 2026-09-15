@@ -52,5 +52,9 @@
   { "city": "Bandar Abbas", "country": "Iran", "countryCode": "IRN", "lat": 27.1865, "lng": 56.2808, "year": null, "notes": "" },
   { "city": "Qeshm", "country": "Iran", "countryCode": "IRN", "lat": 26.9581, "lng": 56.2719, "year": null, "notes": "" },
   { "city": "Kish", "country": "Iran", "countryCode": "IRN", "lat": 26.5578, "lng": 53.9827, "year": null, "notes": "" },
-  { "city": "Larak", "country": "Iran", "countryCode": "IRN", "lat": 26.8500, "lng": 56.3667, "year": null, "notes": "" }
+  { "city": "Larak", "country": "Iran", "countryCode": "IRN", "lat": 26.8500, "lng": 56.3667, "year": null, "notes": "" },
+
+  { "city": "Mashhad", "country": "Iran", "countryCode": "IRN", "lat": 36.2972, "lng": 59.6067, "year": null, "notes": "" },
+{ "city": "Niagara Falls", "country": "Canada", "countryCode": "CAN", "lat": 43.0896, "lng": -79.0849, "year": null, "notes": "" },
+{ "city": "Vaughan", "country": "Canada", "countryCode": "CAN", "lat": 43.8361, "lng": -79.4983, "year": null, "notes": "" }
 ]
