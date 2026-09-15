@@ -23,7 +23,10 @@ pages/
   piano.html                — Piano page, embeds 3 YouTube videos
   friends.html              — Friends/Collaborators page — NOT linked in nav (commented out); has 4 placeholder "Friend Name" cards, never filled in
   test.html                 — orphan scratch file, single raw YouTube iframe, no navbar/footer/site chrome, not linked from anywhere; looks like a leftover test artifact
+  world.html                — interactive travel map (Leaflet.js + CartoDB dark tiles). Visited countries are highlighted from a GeoJSON overlay; clicking a highlighted country or a city marker opens a side panel listing cities visited there. Travel data lives in a `TRAVELS` const inline in this file's own <script> block at the bottom (edit directly to add trips) — the one page with page-specific JS instead of everything living in js/main.js, by deliberate exception (see Conventions & rules).
 assets/
+  data/
+    countries-110m.geojson  — trimmed Natural Earth 110m country boundaries (only NAME + ADM0_A3 properties kept, ~250KB), fetched at runtime by pages/world.html via relative fetch(); not used by any other page. ADM0_A3 is the ISO 3166-1 alpha-3 code, matched against TRAVELS[].countryCode.
   images/
     profile/1.jpg..10.jpg   — hero rotating/sliding photo carousel (10 images)
     logos/                  — concordia-logo.png, ut-logo.png, iust-logo.png (Education section school logos)
@@ -56,12 +59,13 @@ Root page (`index.html`) nav uses same-page anchors + relative links to `pages/`
             </a></li>
             <li><a href="pages/blog.html" class="nav-link">Blog</a></li>
             <li><a href="pages/piano.html" class="nav-link">Piano</a></li>
+            <li><a href="https://darasamii.github.io/pages/world.html" class="nav-link">World</a></li>
             <!-- <li><a href="friends.html" class="nav-link">Friends</a></li> -->
         </ul>
     </div>
 </nav>
 ```
-Sub-pages under `pages/` (blog.html, piano.html, friends.html) use the **same structure but `../`-prefixed relative paths**, and the section links point back to `index.html#section`:
+Sub-pages under `pages/` (blog.html, piano.html, world.html, friends.html) use the **same structure but `../`-prefixed relative paths**, and the section links point back to `index.html#section`:
 ```html
 <nav class="navbar">
     <div class="nav-container">
@@ -78,12 +82,15 @@ Sub-pages under `pages/` (blog.html, piano.html, friends.html) use the **same st
             <li><a href="../index.html#experience" class="nav-link">Experience</a></li>
             <li><a href="blog.html" class="nav-link">Blog</a></li>
             <li><a href="piano.html" class="nav-link">Piano</a></li>
+            <li><a href="https://darasamii.github.io/pages/world.html" class="nav-link">World</a></li>
             <!-- <li><a href="friends.html" class="nav-link">Friends</a></li> -->
         </ul>
     </div>
 </nav>
 ```
 Note: on sub-pages there's no CV link in the nav (only index.html has it). The currently-active page/section gets `class="nav-link active"` added manually in the HTML (not fully dynamic across pages — `main.js`'s `updateActiveLink()` only handles in-page anchor scrolling on index.html via `section[id]` + scroll position).
+
+**Exception — the World link uses an absolute URL everywhere**, including inside `pages/world.html`'s own nav copy (`href="https://darasamii.github.io/pages/world.html"`), unlike every other nav link on the site which is root- or `../`-relative. This was an explicit, deliberate choice (not an oversight) made when the World page was added. Practical consequence: clicking "World" while testing the site locally (e.g. via `python -m http.server` or `file://`) navigates away to the live production site instead of the local copy — worth knowing when developing/testing other pages. `friends.html` was NOT updated with a World link (it's already unlinked/orphaned from every nav, so it was left as-is).
 
 Friends link is commented out on **every** page — friends.html is orphaned (reachable only by direct URL).
 
@@ -187,8 +194,13 @@ Clicking a slideshow image (or empty container area) opens the full-screen `.ima
 ### Section structure
 Every top-level `<section id="X" class="X">` on index.html follows: `<div class="container"><h2 class="section-title">Title</h2>...content grid...</div></section>`. Sections alternate background between `--color-bg` and `--color-bg-secondary` for visual rhythm (About, Publications, Experience, Awards, Contact use secondary; Hero, Education, Projects, Certifications use base).
 
+### World map (pages/world.html)
+Third-party lib: **Leaflet.js 1.9.4** (CDN: `cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.{js,css}`) — the only external JS library used anywhere on the site besides Font Awesome's CSS. Tile layer is CartoDB "dark_all" (Dark Matter) basemap tiles (`{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png`), chosen over default OpenStreetMap tiles so the map matches the site's dark theme; requires the OSM + CARTO attribution shown in `L.tileLayer`'s `attribution` option — don't remove it.
+Structure: `.world-layout` (flex row, wraps to column ≤768px) containing `#worldMap` (`.world-map`, min-height 65vh) and `#worldPanel` (`.world-panel`, fixed 300px sidebar on desktop, full-width stacked below the map on mobile). A `.world-stats` line above shows "`N countries · M cities visited`", computed from the `TRAVELS` array.
+Data flow: `TRAVELS` (inline array of `{city, country, countryCode, lat, lng, year, notes}`) is the single source of truth, hand-edited directly in `pages/world.html`'s own `<script>` block — add a trip by adding an object to that array. `countryCode` must be an ISO 3166-1 alpha-3 code matching the `ADM0_A3` property in `assets/data/countries-110m.geojson` (a trimmed Natural Earth 110m boundaries file, fetched at runtime via `fetch()`). Only countries present in `TRAVELS` get a polygon overlay at all (`L.geoJSON`'s `filter` option excludes everything else) — colored with `--color-success` fill, brightening to `--color-primary-light` on hover, and opens/updates the side panel + `fitBounds`-zooms to that country on click. Every `TRAVELS` entry also gets a small `L.circleMarker` dot (`--color-accent` fill) with a Leaflet popup (city/country/year/notes); clicking a marker also opens the same side panel as clicking its country polygon. Leaflet's own popup/attribution-control chrome is re-themed in `css/style.css` (`.leaflet-popup-*`, `.leaflet-control-attribution`) to match the dark palette instead of Leaflet's default light styling.
+
 ## JavaScript behavior
-All in `js/main.js`, vanilla, no dependencies. Key pieces:
+All in `js/main.js`, vanilla, no dependencies, **except `pages/world.html`, which has its own inline `<script>` for map/travel-data logic** (see Conventions & rules for why). Key pieces of `main.js`:
 1. **Rotating profile photo (`changeProfilePhoto`)** — dead/legacy code: targets `#rotating-profile` element and `assets/images/profile/{n}.jpg`, but `index.html` no longer has an element with id `rotating-profile` (it uses the CSS-only `.image-slider` with 10 static `<img>` tags instead). This function silently no-ops (querySelector returns null) — **effectively unused leftover from an earlier version**; the real photo-cycling is the pure-CSS `.image-slider`/`imageSlide` keyframe animation.
 2. **Navbar mobile toggle** — click `.nav-toggle` toggles `.active` on `.nav-menu` and `.nav-toggle`; clicking any `.nav-link` closes the mobile menu.
 3. **Navbar scroll shrink** — on `scroll`, toggles inline `padding`/`background` styles on `.navbar` when `scrollY > 100`.
@@ -227,7 +239,8 @@ Every page's `<ul class="nav-menu">` must be edited individually (there's no sha
 - Contact email in index.html footer/contact section is `dara.rahmatsamii@mail.concordia.ca` (a university address that will expire after graduation, June 2026) — may need updating to a permanent address later.
 
 ## Conventions & rules
-- **Single shared CSS/JS file**: never create page-specific stylesheets or scripts — everything lives in `css/style.css` and `js/main.js`, loaded by every page. Add new component styles to `style.css` near related existing rules (the file has a rough section-by-section structure with comment banners like `/* Projects Section */`), and new behaviors as another `initX()` function called from `initializeAll()`.
+- **Single shared CSS file, holds for JS with one exception**: never create page-specific stylesheets — everything visual lives in `css/style.css`, loaded by every page; add new component styles near related existing rules (the file has a rough section-by-section structure with comment banners like `/* Projects Section */`). For JS, the default is still the shared `js/main.js` (new global behaviors as another `initX()` function called from `initializeAll()`), **but `pages/world.html` deliberately breaks this**: its map logic and the editable `TRAVELS` data array live in an inline `<script>` at the bottom of that file instead, per explicit request (so the travel data stays a plain, easy-to-edit `const` visible right in the page, not buried in the shared script). Treat this as the one sanctioned exception, not a precedent to scatter more inline scripts — a future page needing page-specific JS should ask whether it truly needs its own data-editing ergonomics like World does, or whether it fits `main.js`'s guarded-`initX()` pattern instead.
+- **Third-party libraries are otherwise avoided**: Leaflet.js (`pages/world.html` only) is the sole exception to "vanilla JS, no dependencies" — loaded from cdnjs, pinned to an exact version (`1.9.4`), same pattern as Font Awesome. Don't add other libraries without a similarly good reason.
 - **CSS variables only for colors/spacing/radius/transitions** — never hardcode a hex color or fixed spacing value in new component CSS; use existing `--color-*`, `--space-*`, `--radius-*`, `--transition-*` vars for consistency (deviations exist for one-off shadow colors like `rgba(99,102,241,0.3)` which are just the primary color's RGB manually — reuse that same pattern if adding new shadows).
 - **Relative paths depend on directory depth**: `index.html` refers to root-relative paths (`css/style.css`, `assets/...`, `pages/...`); anything under `pages/` uses `../` prefix for css/js/assets and root, and bare filenames for sibling pages.
 - **Image organization**: project images live in `assets/images/projects/<project-slug>/`, one folder per project matching the `data-project` attribute value on the `.project-card`.

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World | Dara Rahmat Samii</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-logo"><span class="logo-text">DRS</span></a>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="../index.html" class="nav-link">Home</a></li>
+                <li><a href="../index.html#about" class="nav-link">About</a></li>
+                <li><a href="../index.html#education" class="nav-link">Education</a></li>
+                <li><a href="../index.html#publications" class="nav-link">Publications</a></li>
+                <li><a href="../index.html#projects" class="nav-link">Projects</a></li>
+                <li><a href="../index.html#experience" class="nav-link">Experience</a></li>
+                <li><a href="blog.html" class="nav-link">Blog</a></li>
+                <li><a href="piano.html" class="nav-link">Piano</a></li>
+                <li><a href="https://darasamii.github.io/pages/world.html" class="nav-link active">World</a></li>
+                <!-- <li><a href="friends.html" class="nav-link">Friends</a></li> -->
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>🌍 World</h1>
+            <p class="contact-text">Countries and cities I've explored</p>
+        </div>
+    </header>
+
+    <section class="page-content">
+        <div class="container">
+            <div class="world-content">
+                <p class="world-stats" id="worldStats">Loading travel data&hellip;</p>
+
+                <div class="world-layout">
+                    <div id="worldMap" class="world-map"></div>
+                    <div class="world-panel" id="worldPanel">
+                        <div class="world-panel-placeholder">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <p>Click a highlighted country to see the cities I visited there.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Dara Rahmat Samii. Built with ☕ and curiosity.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+    (function () {
+        // ============================================
+        // Travel data — edit this array to add trips.
+        // countryCode must be the ISO 3166-1 alpha-3 code
+        // (matches the ADM0_A3 property in the bundled
+        // assets/data/countries-110m.geojson file).
+        // ============================================
+        const TRAVELS = [
+            { city: "Montreal", country: "Canada", countryCode: "CAN", lat: 45.5017, lng: -73.5673, year: 2022, notes: "Home base for grad school" },
+            { city: "Toronto",  country: "Canada", countryCode: "CAN", lat: 43.6532, lng: -79.3832, year: 2023, notes: "" },
+            { city: "Tehran",   country: "Iran",   countryCode: "IRN", lat: 35.6892, lng: 51.3890,  year: 2019, notes: "Hometown" }
+        ];
+
+        const COUNTRIES_GEOJSON_URL = '../assets/data/countries-110m.geojson';
+
+        const rootStyle = getComputedStyle(document.documentElement);
+        const COLOR_VISITED = rootStyle.getPropertyValue('--color-success').trim() || '#10b981';
+        const COLOR_VISITED_HOVER = rootStyle.getPropertyValue('--color-primary-light').trim() || '#818cf8';
+        const COLOR_MARKER = rootStyle.getPropertyValue('--color-accent').trim() || '#f59e0b';
+        const COLOR_MARKER_BORDER = rootStyle.getPropertyValue('--color-bg').trim() || '#0a0a0f';
+
+        function renderStats() {
+            const statsEl = document.getElementById('worldStats');
+            if (!statsEl) return;
+            const countries = new Set(TRAVELS.map(t => t.countryCode));
+            const cities = new Set(TRAVELS.map(t => `${t.city}|${t.countryCode}`));
+            statsEl.innerHTML = `<strong>${countries.size}</strong> countries &middot; <strong>${cities.size}</strong> cities visited`;
+        }
+
+        function showCountryPanel(countryName, countryCode) {
+            const panel = document.getElementById('worldPanel');
+            if (!panel) return;
+
+            const cities = TRAVELS.filter(t => t.countryCode === countryCode);
+            if (cities.length === 0) {
+                panel.innerHTML = `
+                    <div class="world-panel-placeholder">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>No visits logged yet for ${countryName}.</p>
+                    </div>`;
+                return;
+            }
+
+            const items = cities.map(c => `
+                <li>
+                    <div class="world-city-header">
+                        <span class="world-city-name">${c.city}</span>
+                        ${c.year ? `<span class="world-city-year">${c.year}</span>` : ''}
+                    </div>
+                    ${c.notes ? `<p class="world-city-notes">${c.notes}</p>` : ''}
+                </li>`).join('');
+
+            panel.innerHTML = `<h3>${countryName}</h3><ul class="world-city-list">${items}</ul>`;
+        }
+
+        function initWorldMap() {
+            const mapEl = document.getElementById('worldMap');
+            if (!mapEl || typeof L === 'undefined') return;
+
+            const map = L.map(mapEl, {
+                worldCopyJump: true,
+                minZoom: 2,
+                maxBoundsViscosity: 1.0
+            }).setView([20, 10], 2);
+
+            map.setMaxBounds([[-85, -180], [85, 180]]);
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(map);
+
+            const visitedCodes = new Set(TRAVELS.map(t => t.countryCode));
+
+            fetch(COUNTRIES_GEOJSON_URL)
+                .then(res => res.json())
+                .then(geojson => {
+                    L.geoJSON(geojson, {
+                        filter: feature => visitedCodes.has(feature.properties.ADM0_A3),
+                        style: {
+                            color: COLOR_VISITED,
+                            weight: 1.5,
+                            fillColor: COLOR_VISITED,
+                            fillOpacity: 0.35
+                        },
+                        onEachFeature: (feature, layer) => {
+                            const name = feature.properties.NAME;
+                            const code = feature.properties.ADM0_A3;
+                            layer.on({
+                                mouseover: () => layer.setStyle({ fillOpacity: 0.6, weight: 2, color: COLOR_VISITED_HOVER }),
+                                mouseout: () => layer.setStyle({ fillOpacity: 0.35, weight: 1.5, color: COLOR_VISITED }),
+                                click: () => {
+                                    showCountryPanel(name, code);
+                                    map.fitBounds(layer.getBounds(), { maxZoom: 5 });
+                                }
+                            });
+                        }
+                    }).addTo(map);
+                })
+                .catch(err => {
+                    console.error('World map: could not load country borders:', err);
+                });
+
+            TRAVELS.forEach(t => {
+                const marker = L.circleMarker([t.lat, t.lng], {
+                    radius: 6,
+                    color: COLOR_MARKER_BORDER,
+                    weight: 1.5,
+                    fillColor: COLOR_MARKER,
+                    fillOpacity: 1
+                }).addTo(map);
+
+                marker.bindPopup(`
+                    <strong>${t.city}</strong>, ${t.country}${t.year ? ` &middot; ${t.year}` : ''}
+                    ${t.notes ? `<br>${t.notes}` : ''}
+                `);
+
+                marker.on('click', () => showCountryPanel(t.country, t.countryCode));
+            });
+        }
+
+        renderStats();
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initWorldMap);
+        } else {
+            initWorldMap();
+        }
+    })();
+    </script>
+</body>
+</html>
