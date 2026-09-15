@@ -33,41 +33,30 @@
         </div>
     </nav>
 
-    <header class="page-header">
-        <div class="container">
-            <h1>🌍 World</h1>
-            <p class="contact-text">Countries and cities I've explored</p>
-        </div>
-    </header>
+    <div class="world-fullscreen">
+        <div id="worldMap" class="world-map"></div>
 
-    <section class="page-content">
-        <div class="container">
-            <div class="world-content">
-                <p class="world-stats" id="worldStats">Loading travel data&hellip;</p>
+        <div class="world-overlay world-overlay-stats" id="worldStats">Loading travel data&hellip;</div>
 
-                <div class="world-layout">
-                    <div id="worldMap" class="world-map"></div>
-                    <div class="world-panel" id="worldPanel">
-                        <div class="world-panel-placeholder">
-                            <i class="fas fa-map-marked-alt"></i>
-                            <p>Click a highlighted country to see the cities I visited there.</p>
-                        </div>
-                    </div>
-                </div>
+        <div class="world-overlay world-overlay-panel" id="worldPanel">
+            <div class="world-panel-placeholder">
+                <i class="fas fa-map-marked-alt"></i>
+                <p>Click a highlighted country to see the cities I visited there.</p>
             </div>
         </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 Dara Rahmat Samii. Built with ☕ and curiosity.</p>
-        </div>
-    </footer>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script src="../js/main.js"></script>
     <script>
     (function () {
+        // ============================================
+        // CARTO now requires a (free) API key for its basemap
+        // tiles. Get one at https://carto.com/basemaps/apikey/
+        // and paste it below.
+        // ============================================
+        const CARTO_API_KEY = 'cb1_3lc4_1_907495f80883d53c170de6da';
+
         // ============================================
         // Travel data — edit this array to add trips.
         // countryCode must be the ISO 3166-1 alpha-3 code
@@ -129,15 +118,16 @@
             const map = L.map(mapEl, {
                 worldCopyJump: true,
                 minZoom: 2,
-                maxBoundsViscosity: 1.0
+                maxBoundsViscosity: 1.0,
+                zoomControl: true
             }).setView([20, 10], 2);
 
             map.setMaxBounds([[-85, -180], [85, 180]]);
 
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            L.tileLayer(`https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`, {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
                 subdomains: 'abcd',
-                maxZoom: 19
+                maxZoom: 20
             }).addTo(map);
 
             const visitedCodes = new Set(TRAVELS.map(t => t.countryCode));

@@ -1651,69 +1651,63 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); }
 }
 
 /* World Page */
-/* Compact header/content padding + wider container so the map reads as
-   near-fullscreen instead of sitting inside the normal page-content spacing */
-.world-page .page-header {
-    padding: calc(70px + var(--space-sm)) 0 var(--space-sm);
+/* The navbar is position:fixed (floats above content), so a full 100vh
+   section placed right after it fills the entire viewport edge-to-edge —
+   the page is just "navbar + map", no header/footer/container chrome. */
+body.world-page {
+    overflow: hidden;
 }
 
-.world-page .page-content {
-    padding: var(--space-md) 0 var(--space-lg);
-}
-
-.world-page .container {
-    max-width: 1600px;
-}
-
-.world-content {
-    max-width: none;
-    margin: 0 auto;
-}
-
-.world-stats {
-    text-align: center;
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.95rem;
-    margin-bottom: var(--space-lg);
-}
-
-.world-stats strong {
-    color: var(--color-accent);
-}
-
-.world-layout {
-    display: flex;
-    gap: var(--space-lg);
-    align-items: stretch;
+.world-fullscreen {
+    position: relative;
+    width: 100%;
+    height: 100vh;
 }
 
 .world-map {
-    flex: 1;
-    min-width: 0;
-    height: calc(100vh - 210px);
-    min-height: 500px;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    border: 1px solid var(--color-border);
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     background: var(--color-bg-tertiary);
 }
 
-.world-panel {
-    width: 300px;
-    flex-shrink: 0;
-    background: var(--color-bg-secondary);
+.world-overlay {
+    position: absolute;
+    z-index: 500;
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(10px);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    padding: var(--space-lg);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.world-overlay-stats {
+    top: calc(70px + var(--space-md));
+    left: 50%;
+    transform: translateX(-50%);
+    padding: var(--space-sm) var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+}
+
+.world-overlay-stats strong {
+    color: var(--color-accent);
+}
+
+.world-overlay-panel {
+    top: calc(70px + var(--space-md));
+    right: var(--space-lg);
+    width: 300px;
+    max-height: calc(100vh - 70px - (var(--space-lg) * 2));
     overflow-y: auto;
-    height: calc(100vh - 210px);
-    min-height: 500px;
+    padding: var(--space-lg);
 }
 
 .world-panel-placeholder {
-    height: 100%;
-    min-height: 200px;
+    min-height: 160px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1790,17 +1784,18 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); }
 .leaflet-control-attribution a { color: var(--color-primary-light) !important; }
 
 @media (max-width: 768px) {
-    .world-layout {
-        flex-direction: column;
+    .world-overlay-stats {
+        top: auto;
+        bottom: var(--space-md);
+        font-size: 0.8rem;
+        padding: var(--space-xs) var(--space-md);
     }
-    .world-panel {
-        width: 100%;
-        height: auto;
+    .world-overlay-panel {
+        top: calc(70px + var(--space-sm));
+        left: var(--space-sm);
+        right: var(--space-sm);
+        width: auto;
         max-height: 40vh;
-    }
-    .world-map {
-        height: 65vh;
-        min-height: 400px;
     }
 }
 
