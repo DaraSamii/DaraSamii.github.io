@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 </head>
-<body>
+<body class="world-page">
     <nav class="navbar">
         <div class="nav-container">
             <a href="../index.html" class="nav-logo"><span class="logo-text">DRS</span></a>
@@ -187,6 +187,8 @@
 
                 marker.on('click', () => showCountryPanel(t.country, t.countryCode));
             });
+
+            window.addEventListener('resize', () => map.invalidateSize());
         }
 
         renderStats();
