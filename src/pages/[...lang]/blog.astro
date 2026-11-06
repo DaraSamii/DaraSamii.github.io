@@ -1,22 +1,27 @@
 ---
-import Base from '../layouts/Base.astro';
-import { blogPosts, virgool } from '../data/personal.js';
+import Base from '../../layouts/Base.astro';
+import { langPaths, getLang, content, useT, lp } from '../../i18n/index.js';
+import { opt } from '../../lib/img.js';
+export function getStaticPaths() { return langPaths(); }
+const lang = getLang(Astro);
+const t = useT(lang);
+const { blogPosts, virgool } = content(lang);
 ---
-<Base title="Blog" description="Dara Rahmat Samii's writing (in Persian) on Virgool: moving to Canada, learning game theory, IELTS self-study, the chemical engineering olympiad and boogie-woogie piano.">
+<Base lang={lang} title={t('nav.blog')} description={t('desc.blog')}>
   <Fragment slot="head"><link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet" /></Fragment>
   <section class="page-hero">
     <div class="container">
-      <span class="kicker">Blog</span>
-      <h1>Writing</h1>
-      <p class="lead">My writings about experiences, learning, and life (in Persian).</p>
-      <div class="actions"><a class="btn btn-secondary" href={virgool} target="_blank" rel="noopener"><i class="fas fa-external-link-alt" aria-hidden="true"></i> Read on Virgool</a></div>
+      <span class="kicker">{t('blog.kicker')}</span>
+      <h1>{t('blog.title')}</h1>
+      <p class="lead">{t('blog.lead')}</p>
+      <div class="actions"><a class="btn btn-secondary" href={virgool} target="_blank" rel="noopener"><i class="fas fa-external-link-alt" aria-hidden="true"></i> {t('blog.virgool')}</a></div>
     </div>
   </section>
   <section class="section" style="padding-top:8px">
     <div class="container grid grid-3">
       {blogPosts.map((p) => (
         <a class="card card-hover blog-card reveal" href={p.href} target="_blank" rel="noopener" style="color:inherit;text-decoration:none">
-          <img src={p.image} alt={p.alt} loading="lazy" />
+          <img src={opt(p.image, 960)} alt={p.alt} loading="lazy" decoding="async" />
           <div class="body rtl" lang="fa">
             <span class="tag" style="justify-self:start">ویرگول</span>
             <h3 style="font-family:inherit">{p.title}</h3>

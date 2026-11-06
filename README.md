@@ -34,6 +34,16 @@ public/              served as-is: images, CV/cv.pdf + CV/cv-extended.pdf, trave
 docs/DESIGN.md       Meta-inspired design system (npx getdesign@latest add meta)
 ```
 
+### French version
+
+English lives at `/`, French at `/fr/` (switch: EN/FR button in the nav). Pages are in `src/pages/[...lang]/` and render once per language.
+- Page text: `src/i18n/ui.js` (both languages side by side).
+- Content in `src/data/*.js` is English; `src/i18n/fr.js` overlays the French (projects/themes keyed by slug/id, lists by position). Anything missing in French falls back to English, and `npm test` checks every UI key has a French version.
+
+### Images
+
+Put originals in `public/assets/images/`. `npm run build` (and `npm run dev`) first runs `scripts/optimize-images.mjs`, which writes 400/960/1600 px WebP copies to `public/_img/` (gitignored, incremental). Components use `opt(src, width)` from `src/lib/img.js`; slideshow images load only right before they are shown.
+
 ### Add a teaching note
 
 Create `src/content/notes/my-note.md`:

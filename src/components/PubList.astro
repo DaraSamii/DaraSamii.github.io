@@ -1,5 +1,7 @@
 ---
-import { publications } from '../data/research.js';
+import { content } from '../i18n/index.js';
+const { lang = 'en' } = Astro.props;
+const { publications } = content(lang);
 ---
 <div class="grid">
   {publications.map((p) => (
@@ -7,7 +9,7 @@ import { publications } from '../data/research.js';
       <div class="pub-year">{p.year}</div>
       <div>
         <span class="tag tag-cobalt">{p.type}</span>
-        <h3 style="margin-top:10px">{p.title}</h3>
+        <h3 style="margin-top:10px" lang="en">{p.title}</h3>
         <p class="authors" set:html={p.authors} />
         <p class="venue">{p.venue}</p>
         <div class="links">

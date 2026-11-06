@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectFeature from '../../components/ProjectFeature.astro';
+import ImageModal from '../../components/ImageModal.astro';
+import { langPaths, getLang, content, useT, lp } from '../../i18n/index.js';
+export function getStaticPaths() { return langPaths(); }
+const lang = getLang(Astro);
+const t = useT(lang);
+const { projects, categories, themes } = content(lang);
+// Projects featured on /research or /rocketry live there, not here. Each remaining project sits under its first category.
+const elsewhere = new Set([...themes.flatMap((t) => t.projects ?? []), ...projects.filter((p) => p.rocketry).map((p) => p.slug)]);
+const list = projects.filter((p) => !elsewhere.has(p.slug));
+const groups = categories.map((c) => ({ ...c, items: list.filter((p) => p.category[0] === c.id) })).filter((g) => g.items.length);
+---
+<Base lang={lang} title={t('nav.projects')} description={t('desc.projects')}>
+  <section class="page-hero">
+    <div class="container">
+      <span class="kicker">{t('projects.kicker')}</span>
+      <h1>{t('projects.title')}</h1>
+      <p class="lead" set:html={t('projects.lead').replace('{research}', lp('/research/', lang)).replace('{rocketry}', lp('/rocketry/', lang))} />
+      <div class="pills" style="margin-top:28px">
+        {groups.map((g) => <a class="pill" href={`#${g.id}`}>{g.label} <span class="tag" style="margin-left:4px">{g.items.length}</span></a>)}
+      </div>
+    </div>
+  </section>
+  {groups.map((g, n) => (
+    <section class:list={['section', { 'section-alt': n % 2 === 0 }]} id={g.id} style="padding:72px 0">
+      <div class="container">
+        <div class="section-head"><div><span class="kicker">{g.items.length} {g.items.length > 1 ? t('common.projects') : t('common.project')}</span><h2>{g.label}</h2></div></div>
+        <div class="features">{g.items.map((p, i) => <ProjectFeature p={p} flip={i % 2 === 1} lang={lang} />)}</div>
+      </div>
+    </section>
+  ))}
+  <ImageModal lang={lang} />
+</Base>

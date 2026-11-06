@@ -21,16 +21,32 @@ toggle?.addEventListener('click', () => {
 });
 menu?.addEventListener('click', (e) => { if (e.target.closest('a')) menu.classList.remove('open'); });
 
+// Timers below only do work while their element is on screen and the tab is visible.
+const shown = new WeakMap();
+const vio = 'IntersectionObserver' in window && new IntersectionObserver((es) => es.forEach((e) => shown.set(e.target, e.isIntersecting)));
+const watch = (el) => { if (vio) { shown.set(el, false); vio.observe(el); } };
+const onScreen = (el) => !document.hidden && (!vio || shown.get(el));
+// Images below carry data-src and load only right before they are first shown.
+const load = (img) => {
+  if (!img.getAttribute('src') && img.dataset.src) img.src = img.dataset.src;
+  return img.decode ? img.decode().catch(() => {}) : Promise.resolve();
+};
+
 // Hero photo carousel: random next photo every 4 s.
-const photos = [...document.querySelectorAll('.hero-photo img')];
+const heroBox = document.querySelector('.hero-photo');
+const photos = heroBox ? [...heroBox.querySelectorAll(':scope > img')] : [];
 if (photos.length > 1 && !reduced) {
   let cur = 0;
+  watch(heroBox);
   setInterval(() => {
+    if (!onScreen(heroBox)) return;
     let next = cur;
     while (next === cur) next = Math.floor(Math.random() * photos.length);
-    photos[cur].classList.remove('active');
-    photos[next].classList.add('active');
-    cur = next;
+    load(photos[next]).then(() => {
+      photos[cur].classList.remove('active');
+      photos[next].classList.add('active');
+      cur = next;
+    });
   }, 4000);
 }
 
@@ -71,15 +87,20 @@ document.querySelectorAll('.project-media[data-slides]').forEach((box) => {
   const dots = [...box.querySelectorAll('.slide-dots span')];
   let i = 0, timer;
   const show = (n) => {
-    imgs[i].classList.remove('active'); dots[i]?.classList.remove('on');
-    i = (n + imgs.length) % imgs.length;
-    imgs[i].classList.add('active'); dots[i]?.classList.add('on');
+    const next = (n + imgs.length) % imgs.length;
+    load(imgs[next]).then(() => {
+      imgs[i].classList.remove('active'); dots[i]?.classList.remove('on');
+      i = next;
+      imgs[i].classList.add('active'); dots[i]?.classList.add('on');
+    });
   };
   box.querySelector('.slide-prev')?.addEventListener('click', () => show(i - 1));
   box.querySelector('.slide-next')?.addEventListener('click', () => show(i + 1));
-  imgs.forEach((img, n) => img.addEventListener('click', () => openModal(imgs, n)));
+  const full = imgs.map((im) => ({ src: im.dataset.full || im.dataset.src || im.src, alt: im.alt }));
+  imgs.forEach((img, n) => img.addEventListener('click', () => openModal(full, n)));
   if (imgs.length > 1 && !reduced) {
-    const start = () => { timer = setInterval(() => show(i + 1), 4500); };
+    watch(box);
+    const start = () => { timer = setInterval(() => onScreen(box) && show(i + 1), 4500); };
     box.addEventListener('mouseenter', () => clearInterval(timer));
     box.addEventListener('mouseleave', start);
     start();
@@ -96,12 +117,16 @@ document.querySelectorAll('[data-gallery]').forEach((g) => {
   const main = g.querySelector('.feature-main img');
   if (!main) return;
   const thumbs = [...g.querySelectorAll('.thumb')];
-  const list = thumbs.length ? thumbs.map((t) => ({ src: t.dataset.src, alt: t.dataset.alt })) : [{ src: main.src, alt: main.alt }];
+  // `show` is the 960 px copy for the page; `src` is the 1600 px copy for the full-screen viewer.
+  const list = thumbs.length
+    ? thumbs.map((t) => ({ show: t.dataset.src, src: t.dataset.full, alt: t.dataset.alt }))
+    : [{ show: main.src, src: main.dataset.full || main.src, alt: main.alt }];
   const idx = g.querySelector('[data-idx]');
   let cur = 0;
   const show = (i) => {
     cur = (i + list.length) % list.length;
-    main.src = list[cur].src; main.alt = list[cur].alt;
+    main.removeAttribute('srcset');
+    main.src = list[cur].show; main.alt = list[cur].alt;
     if (idx) idx.textContent = cur + 1;
     thumbs.forEach((x, k) => x.setAttribute('aria-pressed', String(k === cur)));
     thumbs[cur]?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
@@ -125,9 +150,20 @@ document.querySelectorAll('[data-gallery]').forEach((g) => {
 // Photo groups (awards, certifications): any image button opens the viewer on its group.
 document.querySelectorAll('[data-photos]').forEach((box) => {
   const btns = [...box.querySelectorAll('button')];
-  const list = btns.map((b) => { const im = b.querySelector('img'); return { src: im.src, alt: im.alt }; });
+  const list = btns.map((b) => { const im = b.querySelector('img'); return { src: im.dataset.full || im.src, alt: im.alt }; });
   btns.forEach((b, i) => b.addEventListener('click', () => openModal(list, i)));
 });
+
+// Click-to-play YouTube: swap the thumbnail for the real player only when asked.
+document.querySelectorAll('[data-yt]').forEach((b) => b.addEventListener('click', () => {
+  const f = document.createElement('iframe');
+  f.src = `https://www.youtube-nocookie.com/embed/${b.dataset.yt}?autoplay=1`;
+  f.title = b.dataset.title;
+  f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  f.referrerPolicy = 'strict-origin-when-cross-origin';
+  f.allowFullscreen = true;
+  b.replaceWith(f);
+}));
 
 // Project category filter
 const filter = document.querySelector('[data-filter]');

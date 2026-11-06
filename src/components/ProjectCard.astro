@@ -1,16 +1,20 @@
 ---
-const { p } = Astro.props;
+import { useT } from '../i18n/index.js';
+import { opt } from '../lib/img.js';
+const { p, lang = 'en' } = Astro.props;
+const t = useT(lang);
 const imgs = p.images ?? [];
 ---
 <article class="card card-hover project reveal" data-cats={p.category.join(' ')} id={p.slug}>
   <div class:list={['project-media', { white: p.whiteBg }]} data-slides={imgs.length ? '' : undefined}>
     {imgs.length ? (
       <>
-        {imgs.map((im, i) => <img src={im.src} alt={im.alt} loading="lazy" decoding="async" class={i === 0 ? 'active' : undefined} />)}
+        {/* Only the first slide loads; site.js fills in the others just before they are shown. */}
+        {imgs.map((im, i) => <img src={i === 0 ? opt(im.src, 960) : undefined} data-src={i === 0 ? undefined : opt(im.src, 960)} data-full={opt(im.src, 1600)} alt={im.alt} loading="lazy" decoding="async" class={i === 0 ? 'active' : undefined} />)}
         {imgs.length > 1 && (
           <>
-            <button class="slide-nav slide-prev" type="button" aria-label="Previous image">‹</button>
-            <button class="slide-nav slide-next" type="button" aria-label="Next image">›</button>
+            <button class="slide-nav slide-prev" type="button" aria-label={t('common.prev')}>‹</button>
+            <button class="slide-nav slide-next" type="button" aria-label={t('common.next')}>›</button>
             <div class="slide-dots" aria-hidden="true">{imgs.map((_, i) => <span class={i === 0 ? 'on' : undefined} />)}</div>
           </>
         )}
@@ -20,13 +24,13 @@ const imgs = p.images ?? [];
     )}
   </div>
   <div class="project-body">
-    {p.featured && <span class="kicker">Featured</span>}
+    {p.featured && <span class="kicker">{t('common.featured')}</span>}
     <h3>{p.title}</h3>
     <p set:html={p.summary} />
     <div class="tags">{p.tech.map((t) => <span class="tag">{t}</span>)}</div>
     {p.details && (
       <details class="more">
-        <summary>Details</summary>
+        <summary>{t('common.details')}</summary>
         <p set:html={p.details} />
       </details>
     )}

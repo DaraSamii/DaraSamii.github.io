@@ -1,7 +1,12 @@
-<div class="modal" role="dialog" aria-modal="true" aria-label="Image viewer">
-  <button class="modal-btn modal-close" type="button" aria-label="Close">×</button>
-  <button class="modal-btn modal-prev" type="button" aria-label="Previous image">‹</button>
+---
+import { useT } from '../i18n/index.js';
+const { lang = 'en' } = Astro.props;
+const t = useT(lang);
+---
+<div class="modal" role="dialog" aria-modal="true" aria-label={t('common.viewer')}>
+  <button class="modal-btn modal-close" type="button" aria-label={t('common.close')}>×</button>
+  <button class="modal-btn modal-prev" type="button" aria-label={t('common.prev')}>‹</button>
   <img alt="" />
-  <button class="modal-btn modal-next" type="button" aria-label="Next image">›</button>
+  <button class="modal-btn modal-next" type="button" aria-label={t('common.next')}>›</button>
   <span class="modal-count">1 / 1</span>
 </div>

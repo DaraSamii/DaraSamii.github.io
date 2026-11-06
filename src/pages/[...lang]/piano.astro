@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/Base.astro';
+import { langPaths, getLang, content, useT, lp } from '../../i18n/index.js';
+export function getStaticPaths() { return langPaths(); }
+const lang = getLang(Astro);
+const t = useT(lang);
+const { pianoVideos } = content(lang);
+---
+<Base lang={lang} title={t('nav.piano')} description={t('desc.piano')}>
+  <section class="page-hero">
+    <div class="container">
+      <span class="kicker">{t('piano.kicker')}</span>
+      <h1>{t('piano.title')}</h1>
+      <p class="lead">{t('piano.lead')}</p>
+      <div class="actions"><a class="btn btn-cobalt" href="https://www.youtube.com/@dara_samii" target="_blank" rel="noopener"><i class="fab fa-youtube" aria-hidden="true"></i> {t('piano.subscribe')}</a></div>
+    </div>
+  </section>
+  <section class="section" style="padding-top:8px">
+    <div class="container grid grid-2">
+      {pianoVideos.map((v) => (
+        <div class="video reveal">
+          {/* Thumbnail first; the YouTube player (≈1 MB of scripts) loads only on click. See site.js [data-yt]. */}
+          <button type="button" class="yt" data-yt={v.id} data-title={v.title} aria-label={`${t('piano.play')}: ${v.title}`}>
+            <img src={`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" width="480" height="360" />
+            <span class="yt-play" aria-hidden="true"><i class="fas fa-play"></i></span>
+          </button>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

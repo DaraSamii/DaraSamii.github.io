@@ -6,7 +6,10 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "test": "node --test src/lib/*.test.js"
+    "test": "node --test src/lib/*.test.js src/i18n/*.test.js",
+    "prebuild": "node scripts/optimize-images.mjs",
+    "predev": "node scripts/optimize-images.mjs",
+    "pretest": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.2.0",
@@ -14,6 +17,7 @@
     "astro": "^6.4.8",
     "katex": "^0.19.1",
     "rehype-katex": "^7.0.1",
-    "remark-math": "^6.0.0"
+    "remark-math": "^6.0.0",
+    "sharp": "^0.34.5"
   }
 }

@@ -9,3 +9,10 @@
 
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Resized images: regenerated only when the source changes. Cache a day, refresh in the background for a week.
+/_img/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/assets/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800

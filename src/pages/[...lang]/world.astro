@@ -1,9 +1,13 @@
 ---
-import Base from '../layouts/Base.astro';
+import Base from '../../layouts/Base.astro';
+import { langPaths, getLang, content, useT, lp } from '../../i18n/index.js';
+export function getStaticPaths() { return langPaths(); }
+const lang = getLang(Astro);
+const t = useT(lang);
 ---
-<Base title="World" description="An interactive map of the countries and cities Dara Rahmat Samii has traveled to." fullBleed>
+<Base lang={lang} title={t('nav.world')} description={t('desc.world')} fullBleed>
   <Fragment slot="head"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" /></Fragment>
-  <h1 class="sr-only">Places I have travelled</h1>
+  <h1 class="sr-only">{t('world.title')}</h1>
   <div id="worldMap" class="world-map"></div>
   <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script is:inline>

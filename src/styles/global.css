@@ -78,15 +78,15 @@ p { margin: 0; }
 /* ---------- Nav ---------- */
 .navbar {
   position: sticky; top: 0; z-index: 100; height: var(--nav-h);
-  background: color-mix(in srgb, var(--canvas) 82%, transparent);
-  backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px);
+  background: color-mix(in srgb, var(--canvas) 96%, transparent); /* no backdrop blur: it re-renders on every scroll frame */
   border-bottom: 1px solid var(--hairline-soft);
 }
 .nav-inner { height: 100%; display: flex; align-items: center; gap: 16px; }
 .nav-logo { font: 700 18px var(--font-display); color: var(--ink-deep); display: flex; align-items: center; gap: 10px; white-space: nowrap; }
-@media (max-width: 360px) { .nav-logo span:last-child { display: none; } }
+@media (max-width: 400px) { .nav-logo span:last-child { display: none; } }
+@media (max-width: 480px) { .nav-actions .coffee { display: none; } .nav-actions { gap: 6px; } }
 .nav-logo:hover { text-decoration: none; color: var(--ink-deep); }
-.nav-logo .mark { width: 32px; height: 32px; border-radius: 50%; background: var(--btn-ink); color: var(--on-btn-ink); display: grid; place-items: center; font-size: 11px; letter-spacing: 0.04em; }
+.nav-logo .mark { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px var(--card), 0 0 0 3px var(--hairline); }
 .nav-menu { display: flex; gap: 2px; list-style: none; margin: 0 0 0 auto; padding: 0; }
 .nav-link { display: block; padding: 8px 12px; border-radius: var(--r-full); color: var(--charcoal); font: 600 14px var(--font-body); }
 .nav-link:hover { background: var(--surface); color: var(--ink-deep); text-decoration: none; }
@@ -177,8 +177,8 @@ p { margin: 0; }
 .hero .actions { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; }
 .socials { margin-top: 28px; display: flex; gap: 8px; }
 .hero-photo { position: relative; aspect-ratio: 4 / 5; border-radius: var(--r-xxxl); overflow: hidden; background: var(--surface); box-shadow: var(--shadow-lg); }
-.hero-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s ease; }
-.hero-photo img.active { opacity: 1; }
+.hero-photo > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s ease; }
+.hero-photo > img.active { opacity: 1; }
 .float-badge {
   position: absolute; display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: var(--r-full);
   background: var(--card); border: 1px solid var(--hairline-soft); box-shadow: var(--shadow-lg); font: 700 13px var(--font-body); color: var(--ink-deep);
@@ -201,7 +201,7 @@ p { margin: 0; }
 .tunnel-stage { position: relative; background: var(--surface); touch-action: pan-y; }
 .tunnel-stage canvas { display: block; width: 100%; height: auto; cursor: ns-resize; }
 .tunnel-hud { position: absolute; left: 14px; top: 14px; display: flex; gap: 8px; flex-wrap: wrap; pointer-events: none; }
-.hud-chip { background: rgba(10, 19, 23, 0.72); color: #f1f4f7; border-radius: var(--r-full); padding: 6px 12px; font: 500 12px var(--font-mono); backdrop-filter: blur(6px); }
+.hud-chip { background: rgba(10, 19, 23, 0.72); color: #f1f4f7; border-radius: var(--r-full); padding: 6px 12px; font: 500 12px var(--font-mono); }
 .tunnel-hint { position: absolute; right: 14px; bottom: 12px; color: rgba(241, 244, 247, 0.8); font: 500 12px var(--font-body); pointer-events: none; }
 .tunnel-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 20px 28px; padding: 22px 24px 24px; }
 .ctrl-label { display: flex; justify-content: space-between; font: 700 12px var(--font-body); color: var(--steel); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
@@ -339,7 +339,7 @@ details.more p { margin-top: 10px; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .js .reveal { opacity: 1; transform: none; transition: none; }
-  .hero-photo img { transition: none; }
+  .hero-photo > img { transition: none; }
 }
 
 /* ---------- Large project features (Research / Rocketry) ---------- */
@@ -389,7 +389,7 @@ details.more p { margin-top: 10px; }
 
 /* ---------- Gallery arrows ---------- */
 .feature-stage { position: relative; }
-.gal-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--hairline); background: color-mix(in srgb, var(--card) 88%, transparent); color: var(--ink-deep); font-size: 15px; cursor: pointer; box-shadow: var(--shadow); backdrop-filter: blur(6px); }
+.gal-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--hairline); background: color-mix(in srgb, var(--card) 88%, transparent); color: var(--ink-deep); font-size: 15px; cursor: pointer; box-shadow: var(--shadow); }
 .gal-nav:hover { background: var(--primary); border-color: var(--primary); color: #fff; }
 .gal-prev { left: 12px; } .gal-next { right: 12px; }
 .feature-stage .feature-count { pointer-events: none; }
@@ -411,3 +411,17 @@ details.more p { margin-top: 10px; }
 .award-mosaic button:hover img { transform: scale(1.03); }
 .award-mosaic figcaption { position: absolute; left: 14px; bottom: 14px; background: rgba(10, 19, 23, 0.72); color: #fff; border-radius: var(--r-full); padding: 5px 12px; font: 600 12px var(--font-body); pointer-events: none; }
 @media (max-width: 800px) { .award-mosaic { grid-template-columns: 1fr; } .award-mosaic .award-main { grid-row: auto; } }
+
+/* ---------- Language switch ---------- */
+.lang-switch { height: 40px; min-width: 44px; padding: 0 12px; border-radius: var(--r-full); border: 1px solid var(--hairline); background: var(--card); color: var(--ink-deep); display: inline-grid; place-items: center; font: 700 13px var(--font-body); letter-spacing: 0.04em; }
+.lang-switch:hover { background: var(--primary); border-color: var(--primary); color: #fff; text-decoration: none; }
+
+/* ---------- Click-to-play YouTube ---------- */
+.yt { position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 0; background: #000; cursor: pointer; }
+.yt img { width: 100%; height: 100%; object-fit: cover; opacity: 0.88; transition: opacity 0.2s; }
+.yt:hover img { opacity: 1; }
+.yt-play { position: absolute; inset: 0; margin: auto; width: 72px; height: 50px; border-radius: 14px; background: #ff0000; color: #fff; display: grid; place-items: center; font-size: 20px; box-shadow: var(--shadow-lg); }
+
+/* ---------- Rendering cost ---------- */
+/* Off-screen sections skip layout and paint until they approach the viewport. */
+.section { content-visibility: auto; contain-intrinsic-size: auto 900px; }

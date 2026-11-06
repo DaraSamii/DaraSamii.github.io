@@ -10,7 +10,7 @@ export async function getStaticPaths() {
 const { note } = Astro.props;
 const { Content } = await render(note);
 ---
-<Base title={note.data.title} description={note.data.description}>
+<Base title={note.data.title} description={note.data.description} translated={false}>
   <article class="container" style="padding-top:56px;padding-bottom:96px">
     <a href="/teaching/" class="link-chip"><i class="fas fa-arrow-left" aria-hidden="true"></i> All notes</a>
     <header style="margin:28px 0 36px;max-width:760px">

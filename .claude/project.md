@@ -24,6 +24,10 @@ The user asked to replace an earlier lattice-Boltzmann wind tunnel because it us
 - Buy Me a Coffee: https://buymeacoffee.com/darasamii (nav, hero, contact, footer). Icons are deliberately colourful (palette cycles via `--ic` on grid items; brand colours on socials).
 - Extended CV (`public/CV/cv-extended.pdf`) includes references with referee emails, by the user's explicit choice.
 
+## Bilingual + performance (2026-11-06)
+- EN at /, FR at /fr/ via `src/pages/[...lang]/` + `langPaths()` (must return fresh objects per page). UI strings `src/i18n/ui.js`, French content overlay `src/i18n/fr.js` merged by slug/id/index. Paper/talk titles stay English. Friends, 404 and teaching notes are English-only (`translated={false}`).
+- Images: originals in public/assets/images; build makes WebP 400/960/1600 in public/_img (sharp, prebuild). Always render through `opt()`; only first slides load eagerly. Animations pause off-screen/hidden; airfoil rAF loop stops when idle. Nav avatar is public/assets/images/avatar.jpg (GitHub avatar). Speed view uses Turbo colormap.
+
 ## Conventions & rules
 - Don't remove content without asking. The user explicitly wants things added and reorganized, never dropped.
 - World map: data stays in `public/assets/data/travels.json` (hand-edited), map logic inline in `src/pages/world.astro`. Country highlighting and a side panel were tried and removed at the user's request; `countries-110m.geojson` is orphaned but kept.

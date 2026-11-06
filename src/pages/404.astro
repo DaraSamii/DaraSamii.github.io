@@ -1,16 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
 ---
-<Base title="Not found">
+<Base title="Not found · Page introuvable" translated={false}>
   <section class="page-hero" style="min-height:50vh">
     <div class="container">
       <span class="kicker">404</span>
       <h1>This page separated from the flow.</h1>
       <p class="lead">The link may be from the old site. Try one of these instead.</p>
+      <p class="lead" lang="fr-CA" style="margin-top:8px">Cette page s’est décollée de l’écoulement. Le lien vient peut-être de l’ancien site.</p>
       <div class="actions">
         <a class="btn btn-primary" href="/">Home</a>
         <a class="btn btn-secondary" href="/research/">Research</a>
         <a class="btn btn-secondary" href="/rocketry/">Rocketry</a>
+        <a class="btn btn-secondary" href="/fr/" lang="fr-CA">Accueil (français)</a>
       </div>
     </div>
   </section>

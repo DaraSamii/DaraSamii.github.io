@@ -175,9 +175,10 @@ export const projects = [
     title: 'Ear Training With Fun',
     category: ['software'],
     icon: 'fas fa-music',
+    images: img('ear-training', ['home-journey.jpg', 'Home: the journey, daily goal and spaced-review queue'], ['courses.jpg', 'Courses: pitch, intervals, scales & keys, melody, rhythm, harmony'], ['games.jpg', 'Games: each one lives in its own paper world with unlockable levels']),
     summary: 'Duolingo-style ear-training web app: courses, 18+ games, spaced review and streaks. React + Firebase.',
     tech: ['TypeScript', 'React', 'Firebase'],
-    links: [gh('DaraSamii/EarTrainingWithFun')],
+    links: [{ label: 'Live app', icon: 'fas fa-play', href: 'https://darasamii.github.io/EarTrainingWithFun/' }, gh('DaraSamii/EarTrainingWithFun')],
   },
   {
     slug: 'kde-plasma',

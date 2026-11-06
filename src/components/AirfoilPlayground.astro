@@ -1,57 +1,60 @@
 ---
+import { useT } from '../i18n/index.js';
+const { lang = 'en' } = Astro.props;
+const t = useT(lang);
 // Exact potential flow around a Joukowski airfoil. The field is recomputed only when a control changes;
 // each frame just moves a few hundred tracer dots. Math: src/lib/joukowski.js (+ tests).
 ---
-<div class="tunnel" data-airfoil>
+<div class="tunnel" data-airfoil data-hint-touch={t('af.hintTouch')} data-camber-word={t('af.camberWord')} data-lang={lang}>
   <div class="tunnel-stage">
-    <canvas aria-label="Flow around an airfoil. Drag up or down on the picture to change the angle of attack." role="img"></canvas>
+    <canvas aria-label={t('af.label')} role="img"></canvas>
     <div class="tunnel-hud">
       <span class="hud-chip" data-out="cl">C<sub>L</sub> —</span>
       <span class="hud-chip" data-out="alpha">α —</span>
       <span class="hud-chip" data-out="shape">—</span>
     </div>
-    <div class="tunnel-hint" data-out="hint">Drag up/down on the airfoil to pitch it</div>
+    <div class="tunnel-hint" data-out="hint">{t('af.hintMouse')}</div>
   </div>
   <div class="airfoil-panel">
     <div class="tunnel-controls">
       <div>
-        <label class="ctrl-label" for="af-aoa">Angle of attack <output data-out="aoa-val">6°</output></label>
+        <label class="ctrl-label" for="af-aoa">{t('af.aoa')} <output data-out="aoa-val">6°</output></label>
         <input id="af-aoa" type="range" min="-10" max="16" step="0.5" value="6" data-in="aoa" />
       </div>
       <div>
-        <label class="ctrl-label" for="af-t">Thickness <output data-out="t-val">—</output></label>
+        <label class="ctrl-label" for="af-t">{t('af.thickness')} <output data-out="t-val">—</output></label>
         <input id="af-t" type="range" min="0" max="0.22" step="0.005" value="0.1" data-in="thickness" />
       </div>
       <div>
-        <label class="ctrl-label" for="af-c">Camber <output data-out="c-val">—</output></label>
+        <label class="ctrl-label" for="af-c">{t('af.camber')} <output data-out="c-val">—</output></label>
         <input id="af-c" type="range" min="0" max="0.2" step="0.005" value="0.06" data-in="camber" />
       </div>
       <div>
-        <div class="ctrl-label">Colour by</div>
-        <div class="pills" data-group="view" role="group" aria-label="Field to colour">
-          <button class="pill" type="button" data-v="cp" aria-pressed="true">Pressure C<sub>p</sub></button>
-          <button class="pill" type="button" data-v="speed" aria-pressed="false">Speed</button>
+        <div class="ctrl-label">{t('af.colour')}</div>
+        <div class="pills" data-group="view" role="group" aria-label={t('af.colour')}>
+          <button class="pill" type="button" data-v="cp" aria-pressed="true">{t('af.pressure')} C<sub>p</sub></button>
+          <button class="pill" type="button" data-v="speed" aria-pressed="false">{t('af.speed')}</button>
         </div>
         <div class="tunnel-legend" data-out="legend"></div>
       </div>
       <div>
-        <div class="ctrl-label">Physics</div>
+        <div class="ctrl-label">{t('af.physics')}</div>
         <div class="pills">
-          <button class="pill" type="button" data-act="kutta" aria-pressed="true">Kutta condition</button>
-          <button class="pill" type="button" data-act="tracers" aria-pressed="true">Tracers</button>
+          <button class="pill" type="button" data-act="kutta" aria-pressed="true">{t('af.kutta')}</button>
+          <button class="pill" type="button" data-act="tracers" aria-pressed="true">{t('af.tracers')}</button>
         </div>
       </div>
     </div>
     <figure class="cp-plot">
-      <svg viewBox="0 0 320 200" role="img" aria-label="Surface pressure coefficient along the chord">
+      <svg viewBox="0 0 320 200" role="img" aria-label={t('af.cpAxis').replace(/<[^>]+>/g, '')}>
         <g data-out="cp-grid"></g>
         <polyline data-out="cp-up" fill="none" stroke-width="2.2" />
         <polyline data-out="cp-lo" fill="none" stroke-width="2.2" />
       </svg>
-      <figcaption><span class="dot up"></span> upper <span class="dot lo"></span> lower · −C<sub>p</sub> vs x/c</figcaption>
+      <figcaption><span class="dot up"></span> {t('af.upper')} <span class="dot lo"></span> {t('af.lower')} · <span set:html={t('af.cpAxis')} /></figcaption>
     </figure>
   </div>
-  <p class="tunnel-note">Exact inviscid solution by conformal mapping (z = ζ + 1/ζ). Lift from Kutta–Joukowski, L = ρUΓ. Turn the Kutta condition off to see why real airfoils need it.</p>
+  <p class="tunnel-note">{t('af.note')}</p>
 </div>
 
 <script>
@@ -62,9 +65,12 @@
   const ctx = canvas.getContext('2d');
   const $ = (k) => el.querySelector(`[data-out="${k}"]`);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const locale = el.dataset.lang === 'fr' ? 'fr-CA' : 'en-CA';
+  const num = (x, d) => x.toLocaleString(locale, { minimumFractionDigits: d, maximumFractionDigits: d });
+  const pct = (x, d) => (x / 100).toLocaleString(locale, { style: 'percent', minimumFractionDigits: d, maximumFractionDigits: d });
   const st = { aoa: 6, thickness: 0.1, camber: 0.06, kutta: true, view: 'cp', tracers: !reduced };
 
-  const dpr = Math.min(2, devicePixelRatio || 1);
+  const dpr = Math.min(1.5, devicePixelRatio || 1); // capped: the full canvas is redrawn every frame
   const W = Math.round(canvas.clientWidth * dpr) || 1200, H = Math.round(W * 0.42);
   canvas.width = W; canvas.height = H;
   const XR = 3.3, YR = (XR * H) / W;
@@ -85,11 +91,23 @@
     }
     return out;
   }
+  // Google's Turbo colormap (polynomial fit, A. Mikhailov 2019): used for the speed field.
+  function turbo() {
+    const out = new Uint8ClampedArray(768);
+    for (let i = 0; i < 256; i++) {
+      const x = i / 255;
+      out[i * 3] = 255 * (0.13572138 + x * (4.6153926 + x * (-42.66032258 + x * (132.13108234 + x * (-152.94239396 + x * 59.28637943)))));
+      out[i * 3 + 1] = 255 * (0.09140261 + x * (2.19418839 + x * (4.84296658 + x * (-14.18503333 + x * (4.27729857 + x * 2.82956604)))));
+      out[i * 3 + 2] = 255 * (0.1066733 + x * (12.64194608 + x * (-60.58204836 + x * (110.36276771 + x * (-89.90310912 + x * 27.34824973)))));
+    }
+    return out;
+  }
+  const TURBO = turbo();
   function theme() {
     const dark = getComputedStyle(document.documentElement).colorScheme === 'dark';
     colors = dark
-      ? { div: lut(['#4b9dff', '#1b4a86', '#0f191e', '#8a3418', '#ff8a5c']), seq: lut(['#0f191e', '#10345f', '#0064e0', '#38bdf8', '#e6f7ff']), body: '#f1f4f7', line: 'rgba(255,255,255,0.35)', dot: 'rgba(255,255,255,0.7)', axis: '#93a2b0' }
-      : { div: lut(['#0457cb', '#7fb2ff', '#f8fafc', '#ffab7a', '#d7263d']), seq: lut(['#ffffff', '#d4e6ff', '#4b9dff', '#0457cb', '#0a1f4a']), body: '#0a1317', line: 'rgba(10,19,23,0.35)', dot: 'rgba(10,19,23,0.45)', axis: '#5d6c7b' };
+      ? { div: lut(['#4b9dff', '#1b4a86', '#0f191e', '#8a3418', '#ff8a5c']), seq: TURBO, body: '#f1f4f7', line: 'rgba(255,255,255,0.35)', dot: 'rgba(255,255,255,0.7)', axis: '#93a2b0' }
+      : { div: lut(['#0457cb', '#7fb2ff', '#f8fafc', '#ffab7a', '#d7263d']), seq: TURBO, body: '#0a1317', line: 'rgba(10,19,23,0.35)', dot: 'rgba(10,19,23,0.45)', axis: '#5d6c7b' };
     const m = st.view === 'speed' ? colors.seq : colors.div;
     $('legend').style.background = `linear-gradient(90deg, ${[0, 64, 128, 192, 255].map((i) => `rgb(${m[i * 3]},${m[i * 3 + 1]},${m[i * 3 + 2]})`).join(',')})`;
   }
@@ -148,12 +166,12 @@
     o.forEach(([x, y], i) => (i ? bctx.lineTo(px(x), py(y)) : bctx.moveTo(px(x), py(y))));
     bctx.closePath(); bctx.fill();
 
-    $('cl').innerHTML = `C<sub>L</sub> ${f.cl.toFixed(2)}`;
-    $('alpha').textContent = `α ${st.aoa.toFixed(1)}°`;
-    $('shape').textContent = `t/c ≈ ${Math.round(st.thickness * 130)}% · camber ≈ ${(st.camber * 50).toFixed(1)}%`;
-    $('aoa-val').textContent = `${st.aoa}°`;
-    $('t-val').textContent = `${Math.round(st.thickness * 130)}%`;
-    $('c-val').textContent = `${(st.camber * 50).toFixed(1)}%`;
+    $('cl').innerHTML = `C<sub>L</sub> ${num(f.cl, 2)}`;
+    $('alpha').textContent = `α ${num(st.aoa, 1)}°`;
+    $('shape').textContent = `t/c ≈ ${pct(st.thickness * 130, 0)} · ${el.dataset.camberWord} ≈ ${pct(st.camber * 50, 1)}`;
+    $('aoa-val').textContent = `${num(st.aoa, st.aoa % 1 ? 1 : 0)}°`;
+    $('t-val').textContent = pct(st.thickness * 130, 0);
+    $('c-val').textContent = pct(st.camber * 50, 1);
     plotCp();
     if (!st.tracers) draw();
   }
@@ -191,43 +209,49 @@
     }
     ctx.stroke();
   }
-  let visible = false, dirty = true;
+  // The loop runs only while the canvas is on screen with tracers on; otherwise it stops completely
+  // and a change (slider, theme) schedules a single redraw.
+  let visible = false, dirty = true, raf = 0;
+  const animating = () => visible && !document.hidden && st.tracers;
   function frame() {
+    raf = 0;
     if (dirty) { rebuild(); dirty = false; }
-    if (visible && !document.hidden && st.tracers) draw();
-    requestAnimationFrame(frame);
+    if (animating()) { draw(); raf = requestAnimationFrame(frame); }
   }
+  const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+  const invalidate = () => { dirty = true; kick(); };
 
   // Controls
-  el.querySelectorAll('[data-in]').forEach((inp) => inp.addEventListener('input', () => { st[inp.dataset.in] = Number(inp.value); dirty = true; }));
+  el.querySelectorAll('[data-in]').forEach((inp) => inp.addEventListener('input', () => { st[inp.dataset.in] = Number(inp.value); invalidate(); }));
   el.querySelector('[data-group="view"]').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
     st.view = b.dataset.v;
     el.querySelectorAll('[data-group="view"] button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-    theme(); dirty = true;
+    theme(); invalidate();
   });
   el.querySelectorAll('[data-act]').forEach((b) => b.addEventListener('click', () => {
     const k = b.dataset.act; st[k] = !st[k]; b.setAttribute('aria-pressed', String(st[k]));
-    dirty = true;
+    invalidate();
   }));
   // Drag vertically on the picture to change α.
   let drag = null;
   // Mouse: drag up/down. Touch: drag sideways (vertical swipes keep scrolling the page, see touch-action: pan-y).
-  if (matchMedia('(pointer: coarse)').matches) $('hint').textContent = 'Swipe sideways on the airfoil to pitch it';
+  if (matchMedia('(pointer: coarse)').matches) $('hint').textContent = el.dataset.hintTouch;
   canvas.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, a: st.aoa, touch: e.pointerType !== 'mouse' }; canvas.setPointerCapture(e.pointerId); $('hint').textContent = ''; });
   canvas.addEventListener('pointermove', (e) => {
     if (!drag) return;
     const delta = drag.touch ? (e.clientX - drag.x) * 0.08 : (drag.y - e.clientY) * 0.12;
     st.aoa = Math.max(-10, Math.min(16, Math.round((drag.a + delta) * 2) / 2));
-    el.querySelector('[data-in="aoa"]').value = st.aoa; dirty = true;
+    el.querySelector('[data-in="aoa"]').value = st.aoa; invalidate();
   });
   const end = () => (drag = null);
   canvas.addEventListener('pointerup', end); canvas.addEventListener('pointercancel', end);
 
-  new IntersectionObserver(([en]) => (visible = en.isIntersecting)).observe(canvas);
-  const retheme = () => { theme(); dirty = true; };
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; kick(); }).observe(canvas);
+  document.addEventListener('visibilitychange', kick);
+  const retheme = () => { theme(); invalidate(); };
   window.addEventListener('themechange', retheme);
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme);
   theme();
-  requestAnimationFrame(frame);
+  kick();
 </script>

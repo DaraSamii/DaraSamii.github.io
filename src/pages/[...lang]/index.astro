@@ -1,0 +1,186 @@
+---
+import Base from '../../layouts/Base.astro';
+import AirfoilPlayground from '../../components/AirfoilPlayground.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import ImageModal from '../../components/ImageModal.astro';
+import PubList from '../../components/PubList.astro';
+import { langPaths, getLang, content, useT, lp } from '../../i18n/index.js';
+import { opt } from '../../lib/img.js';
+export function getStaticPaths() { return langPaths(); }
+const lang = getLang(Astro);
+const t = useT(lang);
+const { profile, socials, profilePhotos, stats, cvHref, coffee, education, experience, awards, certifications, skills, researchInterests, bySlug } = content(lang);
+const featured = ['cr26-cfd', 'thermal-spray', 'mesh-gnn'].map((s) => bySlug[s]);
+---
+<Base lang={lang} description={profile.intro}>
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <span class="kicker">{profile.role}</span>
+          <h1>Dara Rahmat Samii.<br /><span class="accent">{profile.headline}</span></h1>
+          <p class="lead">{profile.intro}</p>
+          <div class="actions">
+            <a href={lp('/research/', lang)} class="btn btn-primary">{t('home.explore')}</a>
+          </div>
+          <div class="socials">
+            {socials.map((s) => <a class="icon-btn brand" style={`--brand:${s.color}`} href={s.href} target="_blank" rel="noopener" aria-label={s.label}><i class={s.icon} aria-hidden="true"></i></a>)}
+            <a class="icon-btn brand" style="--brand:#ea4335" href={`mailto:${profile.email}`} aria-label={t('home.email')}><i class="fas fa-envelope" aria-hidden="true"></i></a>
+            <a class="icon-btn coffee" href={coffee.href} target="_blank" rel="noopener" aria-label={coffee.label}><i class="fas fa-mug-hot" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div style="position:relative">
+          <div class="hero-photo">
+            {profilePhotos.map((src, i) => <img src={i === 0 ? opt(src, 960) : undefined} data-src={i === 0 ? undefined : opt(src, 960)} alt={profile.name} class={i === 0 ? 'active' : undefined} fetchpriority={i === 0 ? 'high' : undefined} decoding="async" />)}
+            <div class="float-badge badge-1"><i class="fas fa-rocket" aria-hidden="true" style="color:#e41e3f"></i> {t('home.badgeL3')}</div>
+            <div class="float-badge badge-2"><img src="/assets/images/logos/mcgill-crest.png" alt="" /> {t('home.badgePhd')}</div>
+          </div>
+        </div>
+      </div>
+      <div class="stats">
+        {stats.map((s) => <div class="stat"><b>{s.value}</b><span>{s.label}</span></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="airfoil">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="kicker">{t('home.interactive')}</span>
+          <h2>{t('home.airfoilTitle')}</h2>
+          <p>{t('home.airfoilLead')}</p>
+        </div>
+      </div>
+      <AirfoilPlayground lang={lang} />
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-head"><div><span class="kicker">{t('home.about')}</span><h2>{t('home.aboutTitle')}</h2></div></div>
+      <div class="grid grid-2" style="align-items:start">
+        <div class="prose reveal" style="font-size:17px">
+          <p set:html={t('home.about1')} />
+          <p set:html={t('home.about2')} />
+          <p set:html={t('home.about3')} />
+          <p set:html={t('home.about4').replace('{teaching}', lp('/teaching/', lang))} />
+          <div class="tags" style="margin-top:20px">{researchInterests.map((r) => <span class="tag tag-cobalt">{r}</span>)}</div>
+        </div>
+        <div class="grid" style="gap:12px">
+          {skills.map((s) => (
+            <div class="card reveal row" style="padding:18px 20px">
+              <div class="card-icon"><i class={s.icon} aria-hidden="true"></i></div>
+              <div><h3 style="font-size:16px">{s.title}</h3><div class="tags" style="margin-top:8px">{s.items.map((x) => <span class="tag">{x}</span>)}</div></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="projects">
+    <div class="container">
+      <div class="section-head">
+        <div><span class="kicker">{t('home.selected')}</span><h2>{t('home.selectedTitle')}</h2></div>
+        <a href={lp('/research/', lang)} class="btn btn-secondary">{t('home.allResearch')}</a>
+      </div>
+      <div class="grid grid-3">{featured.map((p) => <ProjectCard p={p} lang={lang} />)}</div>
+    </div>
+  </section>
+
+  <section class="section" id="publications">
+    <div class="container">
+      <div class="section-head">
+        <div><span class="kicker">{t('home.pubs')}</span><h2>{t('home.pubsTitle')}</h2></div>
+        <a href={lp('/research/', lang)} class="btn btn-secondary">{t('home.researchTalks')}</a>
+      </div>
+      <PubList lang={lang} />
+    </div>
+  </section>
+
+  <section class="section section-alt" id="education">
+    <div class="container">
+      <div class="section-head"><div><span class="kicker">{t('home.education')}</span><h2>{t('home.educationTitle')}</h2></div></div>
+      <div class="timeline">
+        {education.map((e) => (
+          <div class="card edu reveal">
+            <img class="edu-logo" src={opt(e.logo, 400)} alt={e.school} loading="lazy" width="64" height="64" />
+            <div>
+              <h3>{e.school}</h3>
+              <p class="meta">{e.degree} · <i class="fas fa-map-marker-alt" aria-hidden="true"></i> {e.location}</p>
+              <dl>{e.details.map(([k, v]) => <><dt>{k}</dt><dd set:html={v} /></>)}</dl>
+            </div>
+            <div class="right"><span>{e.date}</span>{e.badges.map((b) => <span class="tag tag-cobalt">{b}</span>)}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="experience">
+    <div class="container">
+      <div class="section-head"><div><span class="kicker">{t('home.experience')}</span><h2>{t('home.experienceTitle')}</h2></div></div>
+      <div class="grid grid-2">
+        {experience.map((x) => (
+          <div class="card reveal row">
+            <div class="card-icon"><i class={x.icon} aria-hidden="true"></i></div>
+            <div>
+              <h3>{x.title}</h3>
+              <p class="meta"><strong>{x.org}</strong> · {x.date}</p>
+              <ul>{x.points.map((p) => <li>{p}</li>)}</ul>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="awards">
+    <div class="container">
+      <div class="section-head"><div><span class="kicker">{t('home.recognition')}</span><h2>{t('home.awardsTitle')}</h2></div></div>
+      <div class="grid grid-3">
+        {awards.map((a) => (
+          <div class="card reveal row">
+            <div class="card-icon"><i class={a.icon} aria-hidden="true"></i></div>
+            <div><span class="tag">{a.year}</span><h3 style="margin-top:8px;font-size:16px">{a.title}</h3><p class="meta">{a.text}</p>{a.href && <a class="link-chip" style="margin-top:10px" href={lp(a.href, lang)}><i class="fas fa-images" aria-hidden="true"></i> {t('common.photos')}</a>}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="certifications">
+    <div class="container">
+      <div class="section-head"><div><span class="kicker">{t('home.certs')}</span><h2>{t('home.certsTitle')}</h2></div></div>
+      <div class="grid grid-4">
+        {certifications.map((c) => (
+          <div class="card reveal">
+            <div class="card-icon"><i class={c.icon} aria-hidden="true"></i></div>
+            <h3 style="margin-top:14px;font-size:16px">{c.title}</h3>
+            <p class="meta">{c.org}{c.date && ` · ${c.date}`}</p>
+            {c.rocket && <p class="meta">{t('common.rocket')}{lang === 'fr' ? ' :' : ':'} <strong>{c.rocket}</strong> · <a href={lp('/rocketry/#certifications', lang)}>{t('common.photos').toLowerCase()}</a></p>}
+            {c.href && <a class="link-chip" style="margin-top:12px" href={c.href} target="_blank" rel="noopener"><i class="fas fa-external-link-alt" aria-hidden="true"></i> {t('common.credential')}</a>}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact" style="padding-top:0">
+    <div class="container">
+      <div class="promo">
+        <div>
+          <h2>{t('home.contactTitle')}</h2>
+          <p>{t('home.contactLead')}</p>
+        </div>
+        <div class="pills" style="justify-content:flex-end">
+          <a class="btn btn-primary" href={`mailto:${profile.email}`}><i class="fas fa-envelope" aria-hidden="true"></i> {t('home.email')}</a>
+          <a class="btn btn-secondary" style="color:var(--canvas);border-color:var(--canvas)" href={cvHref} target="_blank" rel="noopener">{t('nav.cv')}</a>
+          <a class="btn btn-coffee" href={coffee.href} target="_blank" rel="noopener"><i class="fas fa-mug-hot" aria-hidden="true"></i> {coffee.label}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <ImageModal lang={lang} />
+</Base>
