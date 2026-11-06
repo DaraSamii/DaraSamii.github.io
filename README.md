@@ -65,5 +65,5 @@ If fontawesome5 fails: `pdflatex '\pdfmapfile{+fontawesome5.map}\input{main_exte
 
 ## Deploy
 
-- **Cloudflare Pages** (darasamii.com): connected to this repo; build `npm run build`, output `dist`, env `NODE_VERSION=22`. Every push to `main` deploys. `public/_redirects` maps the old `/pages/*.html` URLs.
+- **Cloudflare Workers (static assets)** (darasamii.com): Git-connected Worker `darasamii-website`; build `npm run build`, deploy `npx wrangler deploy` (config: `wrangler.jsonc`, serves `dist/`). Every push to `main` deploys. `public/_redirects` maps the old `/pages/*.html` URLs.
 - **GitHub Pages** (darasamii.github.io): `.github/workflows/github-pages.yml` builds the same site; an inline script sends github.io visitors to darasamii.com with the same path. Requires Settings → Pages → Source = GitHub Actions.
