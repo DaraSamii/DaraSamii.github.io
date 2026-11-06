@@ -6,10 +6,32 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.querySelectorAll('.theme-toggle').forEach((btn) => {
   btn.addEventListener('click', () => {
     const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-    root.dataset.theme = dark ? 'light' : 'dark';
-    try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
-    window.dispatchEvent(new Event('themechange'));
+    const apply = () => {
+      root.dataset.theme = dark ? 'light' : 'dark';
+      try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+      window.dispatchEvent(new Event('themechange'));
+    };
+    // Crossfade the whole page; the knob has its own transition name, so it slides instead of fading.
+    if (document.startViewTransition && !reduced) document.startViewTransition(apply);
+    else apply();
   });
+});
+
+// Language switch: slide the knob to the other language, then go to the same page in that language.
+document.querySelectorAll('[data-lang-switch]').forEach((a) => a.addEventListener('click', (e) => {
+  if (reduced || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+  e.preventDefault();
+  a.dataset.pos = a.dataset.pos === '1' ? '0' : '1';
+  setTimeout(() => { location.href = a.href; }, 280);
+}));
+
+// Images that are not loaded yet fade in when they arrive.
+document.querySelectorAll('img').forEach((img) => {
+  if (img.complete || !img.getAttribute('src')) return;
+  img.classList.add('img-wait');
+  const done = () => img.classList.remove('img-wait');
+  img.addEventListener('load', done, { once: true });
+  img.addEventListener('error', done, { once: true });
 });
 
 // Mobile menu
@@ -53,12 +75,18 @@ if (photos.length > 1 && !reduced) {
 // Project slideshows + shared image modal
 const modal = document.querySelector('.modal');
 let modalImgs = [], modalIdx = 0;
+// The viewer image zooms/fades in once loaded and fades out before switching to the next one.
 function showModal(i) {
   modalIdx = (i + modalImgs.length) % modalImgs.length;
   const img = modal.querySelector('img');
-  img.src = modalImgs[modalIdx].src;
-  img.alt = modalImgs[modalIdx].alt;
+  const { src, alt } = modalImgs[modalIdx];
   modal.querySelector('.modal-count').textContent = `${modalIdx + 1} / ${modalImgs.length}`;
+  img.classList.remove('ready');
+  const swap = () => {
+    img.src = src; img.alt = alt;
+    (img.decode ? img.decode() : Promise.resolve()).catch(() => {}).then(() => img.classList.add('ready'));
+  };
+  if (img.getAttribute('src') && !reduced) setTimeout(swap, 150); else swap();
 }
 function closeModal() { modal.classList.remove('open'); document.body.style.overflow = ''; }
 if (modal) {
@@ -125,8 +153,13 @@ document.querySelectorAll('[data-gallery]').forEach((g) => {
   let cur = 0;
   const show = (i) => {
     cur = (i + list.length) % list.length;
-    main.removeAttribute('srcset');
-    main.src = list[cur].show; main.alt = list[cur].alt;
+    const { show: next, alt } = list[cur];
+    main.classList.add('swap');
+    setTimeout(() => {
+      main.removeAttribute('srcset');
+      main.src = next; main.alt = alt;
+      (main.decode ? main.decode() : Promise.resolve()).catch(() => {}).then(() => main.classList.remove('swap'));
+    }, reduced ? 0 : 180);
     if (idx) idx.textContent = cur + 1;
     thumbs.forEach((x, k) => x.setAttribute('aria-pressed', String(k === cur)));
     thumbs[cur]?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });

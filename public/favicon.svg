@@ -1,1 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="#0a1317"/><path d="M14 38c8-10 16-10 24-2s12 6 12 6M14 28c8-8 14-8 20-2" fill="none" stroke="#4b9dff" stroke-width="4" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0457cb"/>
+      <stop offset="1" stop-color="#4b9dff"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="url(#g)"/>
+  <!-- streamlines bending around an airfoil at incidence -->
+  <path d="M6 20 C18 20 24 14 36 15 S52 21 60 21" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M6 47 C20 47 30 46 42 43 S54 39 60 39" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M11 33.5 C11 27.5 19 24.5 28 25.5 C38 26.6 48 30.5 56 35 C47 36.5 37 38.5 27 39.2 C17 39.8 11 38 11 33.5 Z" fill="#fff"/>
+</svg>

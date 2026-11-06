@@ -26,7 +26,7 @@ The user asked to replace an earlier lattice-Boltzmann wind tunnel because it us
 
 ## Bilingual + performance (2026-11-06)
 - EN at /, FR at /fr/ via `src/pages/[...lang]/` + `langPaths()` (must return fresh objects per page). UI strings `src/i18n/ui.js`, French content overlay `src/i18n/fr.js` merged by slug/id/index. Paper/talk titles stay English. Friends, 404 and teaching notes are English-only (`translated={false}`).
-- Images: originals in public/assets/images; build makes WebP 400/960/1600 in public/_img (sharp, prebuild). Always render through `opt()`; only first slides load eagerly. Animations pause off-screen/hidden; airfoil rAF loop stops when idle. Nav avatar is public/assets/images/avatar.jpg (GitHub avatar). Speed view uses Turbo colormap.
+- Images: originals in public/assets/images; build makes WebP 400/960/1600 in public/_img (sharp, prebuild). Always render through `opt()`; only first slides load eagerly. Animations pause off-screen/hidden; airfoil rAF loop stops when idle. Nav + favicon use public/logo.svg (airfoil with streamlines); the user preferred a site icon over their photo. Nav has sliding switches for EN/FR and light/dark; the active-page bubble slides between pages via cross-document view transitions (view-transition-name: nav-pill). All appear/disappear UI should animate (opacity/transform only) and respect reduced motion. Speed view uses Turbo colormap.
 
 ## Conventions & rules
 - Don't remove content without asking. The user explicitly wants things added and reorganized, never dropped.

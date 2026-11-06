@@ -83,23 +83,24 @@ p { margin: 0; }
 }
 .nav-inner { height: 100%; display: flex; align-items: center; gap: 16px; }
 .nav-logo { font: 700 18px var(--font-display); color: var(--ink-deep); display: flex; align-items: center; gap: 10px; white-space: nowrap; }
-@media (max-width: 400px) { .nav-logo span:last-child { display: none; } }
-@media (max-width: 480px) { .nav-actions .coffee { display: none; } .nav-actions { gap: 6px; } }
+@media (max-width: 480px) { .nav-logo span:last-child { display: none; } }
+@media (max-width: 480px) { .nav-actions { gap: 6px; } }
 .nav-logo:hover { text-decoration: none; color: var(--ink-deep); }
-.nav-logo .mark { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px var(--card), 0 0 0 3px var(--hairline); }
+.nav-logo .mark { width: 36px; height: 36px; border-radius: 11px; transition: transform 0.4s cubic-bezier(.3, 1.4, .5, 1); }
+.nav-logo:hover .mark { transform: rotate(-8deg) scale(1.06); }
 .nav-menu { display: flex; gap: 2px; list-style: none; margin: 0 0 0 auto; padding: 0; }
-.nav-link { display: block; padding: 8px 12px; border-radius: var(--r-full); color: var(--charcoal); font: 600 14px var(--font-body); }
+.nav-menu li { position: relative; }
+.nav-link { position: relative; z-index: 1; display: block; padding: 8px 12px; border-radius: var(--r-full); color: var(--charcoal); font: 600 14px var(--font-body); transition: background-color 0.2s, color 0.2s; }
 .nav-link:hover { background: var(--surface); color: var(--ink-deep); text-decoration: none; }
-.nav-link[aria-current='page'] { background: var(--ink-deep); color: var(--canvas); }
+.nav-link[aria-current='page'], .nav-link[aria-current='page']:hover { background: transparent; color: var(--canvas); }
+/* The black bubble behind the active link; page transitions slide it to the new link. */
+.nav-pill { position: absolute; inset: 0; border-radius: var(--r-full); background: var(--ink-deep); view-transition-name: nav-pill; }
 .nav-actions { display: flex; gap: 8px; align-items: center; }
 .icon-btn {
   width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--hairline); background: var(--card);
   color: var(--ink); display: inline-grid; place-items: center; cursor: pointer; font-size: 15px;
 }
 .icon-btn:hover { background: var(--surface); }
-.theme-toggle .fa-sun { display: none; }
-:root[data-theme='dark'] .theme-toggle .fa-sun { display: inline; }
-:root[data-theme='dark'] .theme-toggle .fa-moon { display: none; }
 .nav-toggle { display: none; }
 @media (max-width: 1060px) {
   .nav-toggle { display: inline-grid; }
@@ -207,7 +208,8 @@ p { margin: 0; }
   background: rgba(10, 19, 23, 0.82); color: #ffffff; border-radius: var(--r-full); padding: 6px 12px 6px 30px;
   font: 600 12.5px/1.3 var(--font-display); letter-spacing: 0.01em; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); }
 .tunnel-hint::before { content: '↕'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #ffdd00; font-weight: 700; }
-.tunnel-hint:empty { display: none; }
+.tunnel-hint { transition: opacity 0.35s ease, transform 0.35s ease; }
+.tunnel-hint.gone { opacity: 0; transform: translateY(8px); }
 @media (pointer: coarse) { .tunnel-hint::before { content: '↔'; } }
 .tunnel-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 20px 28px; padding: 22px 24px 24px; }
 .ctrl-label { display: flex; justify-content: space-between; font: 700 12px var(--font-body); color: var(--steel); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
@@ -274,9 +276,12 @@ details.more[open] summary::after { content: ' −'; }
 details.more p { margin-top: 10px; }
 
 /* ---------- Image modal ---------- */
-.modal { position: fixed; inset: 0; z-index: 300; background: rgba(5, 9, 12, 0.92); display: none; place-items: center; padding: 24px; }
-.modal.open { display: grid; }
-.modal img { max-width: min(1200px, 92vw); max-height: 82vh; object-fit: contain; border-radius: var(--r-xl); background: #fff; }
+.modal { position: fixed; inset: 0; z-index: 300; background: rgba(5, 9, 12, 0.92); display: grid; place-items: center; padding: 24px;
+  opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.25s ease, visibility 0s linear 0.25s; }
+.modal.open { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 0.25s ease; }
+.modal img { max-width: min(1200px, 92vw); max-height: 82vh; object-fit: contain; border-radius: var(--r-xl); background: #fff;
+  transform: scale(0.94); opacity: 0; transition: transform 0.3s cubic-bezier(.2, .9, .3, 1), opacity 0.2s ease; }
+.modal.open img.ready { transform: none; opacity: 1; }
 .modal-btn { position: absolute; width: 48px; height: 48px; border-radius: 50%; border: none; background: rgba(255, 255, 255, 0.12); color: #fff; font-size: 22px; cursor: pointer; }
 .modal-close { top: 20px; right: 20px; }
 .modal-prev { left: 20px; top: 50%; } .modal-next { right: 20px; top: 50%; }
@@ -419,8 +424,6 @@ details.more p { margin-top: 10px; }
 @media (max-width: 800px) { .award-mosaic { grid-template-columns: 1fr; } .award-mosaic .award-main { grid-row: auto; } }
 
 /* ---------- Language switch ---------- */
-.lang-switch { height: 40px; min-width: 44px; padding: 0 12px; border-radius: var(--r-full); border: 1px solid var(--hairline); background: var(--card); color: var(--ink-deep); display: inline-grid; place-items: center; font: 700 13px var(--font-body); letter-spacing: 0.04em; }
-.lang-switch:hover { background: var(--primary); border-color: var(--primary); color: #fff; text-decoration: none; }
 
 /* ---------- Click-to-play YouTube ---------- */
 .yt { position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 0; background: #000; cursor: pointer; }
@@ -431,3 +434,67 @@ details.more p { margin-top: 10px; }
 /* ---------- Rendering cost ---------- */
 /* Off-screen sections skip layout and paint until they approach the viewport. */
 .section { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+
+/* ---------- Switches (language, theme): a knob slides over the chosen option ---------- */
+.seg { position: relative; display: inline-grid; grid-template-columns: 1fr 1fr; align-items: center; height: 38px; padding: 3px;
+  border-radius: var(--r-full); border: 1px solid var(--hairline); background: var(--surface); cursor: pointer; font: 700 12px var(--font-body); }
+.seg:hover { text-decoration: none; border-color: var(--stone); }
+.seg-knob { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: var(--r-full); background: var(--ink-deep);
+  box-shadow: var(--shadow); transition: transform 0.35s cubic-bezier(.3, 1.35, .5, 1); }
+.seg-opt { position: relative; z-index: 1; width: 32px; display: grid; place-items: center; color: var(--steel); letter-spacing: 0.04em; transition: color 0.3s; }
+.seg-lang .seg-knob { view-transition-name: lang-knob; }
+.seg-theme .seg-knob { view-transition-name: theme-knob; }
+.seg[data-pos='1'] .seg-knob { transform: translateX(100%); }
+.seg-lang[data-pos='0'] .seg-opt:nth-child(2), .seg-lang[data-pos='1'] .seg-opt:nth-child(3) { color: var(--canvas); }
+/* Theme knob follows the theme itself (stored choice or OS preference), so it is right before JS runs. */
+.seg-theme .seg-opt:nth-child(2) { color: #f2a918; }
+:root[data-theme='dark'] .seg-theme .seg-knob { transform: translateX(100%); }
+:root[data-theme='dark'] .seg-theme .seg-opt:nth-child(2) { color: var(--steel); }
+:root[data-theme='dark'] .seg-theme .seg-opt:nth-child(3) { color: #ffdd00; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .seg-theme .seg-knob { transform: translateX(100%); }
+  :root:not([data-theme='light']) .seg-theme .seg-opt:nth-child(2) { color: var(--steel); }
+  :root:not([data-theme='light']) .seg-theme .seg-opt:nth-child(3) { color: #ffdd00; }
+}
+
+/* ---------- Page transitions (Chrome/Edge/Safari; other browsers just navigate) ---------- */
+@view-transition { navigation: auto; }
+.navbar { view-transition-name: site-nav; }
+::view-transition-group(nav-pill), ::view-transition-group(lang-knob), ::view-transition-group(theme-knob) {
+  animation-duration: 0.45s; animation-timing-function: cubic-bezier(.3, 1.2, .5, 1); }
+::view-transition-old(root) { animation: vt-out 0.2s ease both; }
+::view-transition-new(root) { animation: vt-in 0.35s cubic-bezier(.2, .8, .3, 1) both; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(10px); } }
+
+/* ---------- Appear / disappear ---------- */
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } }
+@keyframes fade { from { opacity: 0; } }
+.hero-grid > div:first-child > * { animation: rise 0.6s cubic-bezier(.2, .8, .3, 1) both; }
+.hero-grid > div:first-child > :nth-child(2) { animation-delay: 0.06s; }
+.hero-grid > div:first-child > :nth-child(3) { animation-delay: 0.12s; }
+.hero-grid > div:first-child > :nth-child(4) { animation-delay: 0.18s; }
+.hero-grid > div:first-child > :nth-child(5) { animation-delay: 0.24s; }
+.hero-photo { animation: rise 0.7s 0.1s cubic-bezier(.2, .8, .3, 1) both; }
+.float-badge { animation: rise 0.6s 0.5s cubic-bezier(.3, 1.3, .5, 1) both; }
+.badge-2 { animation-delay: 0.65s; }
+.page-hero .container > * { animation: rise 0.55s cubic-bezier(.2, .8, .3, 1) both; }
+.page-hero .container > :nth-child(2) { animation-delay: 0.05s; }
+.page-hero .container > :nth-child(3) { animation-delay: 0.1s; }
+.page-hero .container > :nth-child(4) { animation-delay: 0.15s; }
+/* Images fade in once loaded (site.js adds .img-wait only to images not yet loaded). */
+.js img.img-wait { opacity: 0 !important; }
+img { transition: opacity 0.4s ease; }
+.feature-main img.swap { opacity: 0; }
+.video iframe { animation: fade 0.5s ease both; }
+/* Project details open and close smoothly where the browser supports it. */
+details.more { interpolate-size: allow-keywords; }
+details.more::details-content { height: 0; overflow: clip; transition: height 0.35s ease, content-visibility 0.35s allow-discrete; }
+details.more[open]::details-content { height: auto; }
+.nav-toggle i { transition: transform 0.3s ease; }
+.nav-toggle[aria-expanded='true'] i { transform: rotate(90deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; transition-duration: 0.01ms !important; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}

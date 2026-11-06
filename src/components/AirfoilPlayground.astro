@@ -237,7 +237,7 @@ const t = useT(lang);
   let drag = null;
   // Mouse: drag up/down. Touch: drag sideways (vertical swipes keep scrolling the page, see touch-action: pan-y).
   if (matchMedia('(pointer: coarse)').matches) $('hint').textContent = el.dataset.hintTouch;
-  canvas.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, a: st.aoa, touch: e.pointerType !== 'mouse' }; canvas.setPointerCapture(e.pointerId); $('hint').textContent = ''; });
+  canvas.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, a: st.aoa, touch: e.pointerType !== 'mouse' }; canvas.setPointerCapture(e.pointerId); $('hint').classList.add('gone'); });
   canvas.addEventListener('pointermove', (e) => {
     if (!drag) return;
     const delta = drag.touch ? (e.clientX - drag.x) * 0.08 : (drag.y - e.clientY) * 0.12;
