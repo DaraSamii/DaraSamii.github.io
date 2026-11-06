@@ -1,0 +1,74 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { profile, socials } from '../data/profile.js';
+
+const { title, description = profile.intro, image = '/assets/images/profile/1.jpg', fullBleed = false } = Astro.props;
+const fullTitle = title ? `${title} | ${profile.name}` : `${profile.name} | ${profile.jobTitle}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  alternateName: profile.shortName,
+  url: profile.site,
+  image: new URL('/assets/images/profile/1.jpg', Astro.site).href,
+  jobTitle: profile.jobTitle,
+  affiliation: { '@type': 'CollegeOrUniversity', name: 'McGill University' },
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'Concordia University' },
+    { '@type': 'CollegeOrUniversity', name: 'University of Tehran' },
+    { '@type': 'CollegeOrUniversity', name: 'Iran University of Science and Technology' },
+  ],
+  knowsAbout: ['Computational Fluid Dynamics', 'OpenFOAM', 'Rocketry', 'Combustion', 'Graph Neural Networks', 'Aeroacoustics'],
+  sameAs: socials.map((s) => s.href),
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a1317" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <script is:inline>
+      // Old address → new domain, keeping the path. Runs before paint.
+      if (location.hostname.endsWith('github.io')) location.replace('https://darasamii.com' + location.pathname + location.search + location.hash);
+      (function () {
+        var t = null;
+        try { t = localStorage.getItem('theme'); } catch (e) {}
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+        document.documentElement.classList.add('js');
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    {!fullBleed && <Footer />}
+    <script>
+      import '../scripts/site.js';
+    </script>
+  </body>
+</html>

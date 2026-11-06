@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+import 'katex/dist/katex.min.css';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes', (n) => !n.data.draft);
+  return notes.map((note) => ({ params: { slug: note.id }, props: { note } }));
+}
+const { note } = Astro.props;
+const { Content } = await render(note);
+---
+<Base title={note.data.title} description={note.data.description}>
+  <article class="container" style="padding-top:56px;padding-bottom:96px">
+    <a href="/teaching/" class="link-chip"><i class="fas fa-arrow-left" aria-hidden="true"></i> All notes</a>
+    <header style="margin:28px 0 36px;max-width:760px">
+      <span class="kicker">{note.data.course}</span>
+      <h1 style="font-size:clamp(32px,5vw,48px);line-height:1.12;margin-top:10px">{note.data.title}</h1>
+      <p class="meta" style="margin-top:12px;font-size:15px">{note.data.date.toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })} · Dara Rahmat Samii</p>
+    </header>
+    <div class="prose"><Content /></div>
+  </article>
+</Base>

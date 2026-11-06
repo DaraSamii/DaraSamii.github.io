@@ -1,0 +1,7 @@
+# Old GitHub Pages URLs → new routes (Cloudflare Pages)
+/index.html          /                301
+/pages/blog.html     /blog/           301
+/pages/piano.html    /piano/          301
+/pages/world.html    /world/          301
+/pages/friends.html  /friends/        301
+/pages/test.html     /piano/          301

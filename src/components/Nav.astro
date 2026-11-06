@@ -1,0 +1,28 @@
+---
+import { nav, profile, cvHref, coffee } from '../data/profile.js';
+const path = Astro.url.pathname.replace(/\/?$/, '/');
+const isActive = (href) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+<header class="navbar">
+  <div class="container nav-inner">
+    <a href="/" class="nav-logo" aria-label={`${profile.name}, home`}>
+      <span class="mark">{profile.initials}</span>
+      <span>Dara Samii</span>
+    </a>
+    <ul class="nav-menu" id="nav-menu">
+      {nav.map((item) => (
+        <li><a href={item.href} class="nav-link" aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>
+      ))}
+    </ul>
+    <div class="nav-actions">
+      <a href={cvHref} class="btn btn-primary btn-sm" target="_blank" rel="noopener"><i class="fas fa-file-pdf" aria-hidden="true"></i><span class="nav-cv-label">CV</span><span class="sr-only"> (PDF)</span></a>
+      <a class="icon-btn coffee" href={coffee.href} target="_blank" rel="noopener" aria-label={coffee.label} title={coffee.label}><i class="fas fa-mug-hot" aria-hidden="true"></i></a>
+      <button class="icon-btn theme-toggle" type="button" aria-label="Toggle dark mode">
+        <i class="fas fa-moon" aria-hidden="true"></i><i class="fas fa-sun" aria-hidden="true"></i>
+      </button>
+      <button class="icon-btn nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu">
+        <i class="fas fa-bars" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</header>

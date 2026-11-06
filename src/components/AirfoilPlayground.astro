@@ -1,0 +1,233 @@
+---
+// Exact potential flow around a Joukowski airfoil. The field is recomputed only when a control changes;
+// each frame just moves a few hundred tracer dots. Math: src/lib/joukowski.js (+ tests).
+---
+<div class="tunnel" data-airfoil>
+  <div class="tunnel-stage">
+    <canvas aria-label="Flow around an airfoil. Drag up or down on the picture to change the angle of attack." role="img"></canvas>
+    <div class="tunnel-hud">
+      <span class="hud-chip" data-out="cl">C<sub>L</sub> —</span>
+      <span class="hud-chip" data-out="alpha">α —</span>
+      <span class="hud-chip" data-out="shape">—</span>
+    </div>
+    <div class="tunnel-hint" data-out="hint">Drag up/down on the airfoil to pitch it</div>
+  </div>
+  <div class="airfoil-panel">
+    <div class="tunnel-controls">
+      <div>
+        <label class="ctrl-label" for="af-aoa">Angle of attack <output data-out="aoa-val">6°</output></label>
+        <input id="af-aoa" type="range" min="-10" max="16" step="0.5" value="6" data-in="aoa" />
+      </div>
+      <div>
+        <label class="ctrl-label" for="af-t">Thickness <output data-out="t-val">—</output></label>
+        <input id="af-t" type="range" min="0" max="0.22" step="0.005" value="0.1" data-in="thickness" />
+      </div>
+      <div>
+        <label class="ctrl-label" for="af-c">Camber <output data-out="c-val">—</output></label>
+        <input id="af-c" type="range" min="0" max="0.2" step="0.005" value="0.06" data-in="camber" />
+      </div>
+      <div>
+        <div class="ctrl-label">Colour by</div>
+        <div class="pills" data-group="view" role="group" aria-label="Field to colour">
+          <button class="pill" type="button" data-v="cp" aria-pressed="true">Pressure C<sub>p</sub></button>
+          <button class="pill" type="button" data-v="speed" aria-pressed="false">Speed</button>
+        </div>
+        <div class="tunnel-legend" data-out="legend"></div>
+      </div>
+      <div>
+        <div class="ctrl-label">Physics</div>
+        <div class="pills">
+          <button class="pill" type="button" data-act="kutta" aria-pressed="true">Kutta condition</button>
+          <button class="pill" type="button" data-act="tracers" aria-pressed="true">Tracers</button>
+        </div>
+      </div>
+    </div>
+    <figure class="cp-plot">
+      <svg viewBox="0 0 320 200" role="img" aria-label="Surface pressure coefficient along the chord">
+        <g data-out="cp-grid"></g>
+        <polyline data-out="cp-up" fill="none" stroke-width="2.2" />
+        <polyline data-out="cp-lo" fill="none" stroke-width="2.2" />
+      </svg>
+      <figcaption><span class="dot up"></span> upper <span class="dot lo"></span> lower · −C<sub>p</sub> vs x/c</figcaption>
+    </figure>
+  </div>
+  <p class="tunnel-note">Exact inviscid solution by conformal mapping (z = ζ + 1/ζ). Lift from Kutta–Joukowski, L = ρUΓ. Turn the Kutta condition off to see why real airfoils need it.</p>
+</div>
+
+<script>
+  import { makeAirfoil, velocity, cp, outline, surfaceCp } from '../lib/joukowski.js';
+
+  const el = document.querySelector('[data-airfoil]');
+  const canvas = el.querySelector('canvas');
+  const ctx = canvas.getContext('2d');
+  const $ = (k) => el.querySelector(`[data-out="${k}"]`);
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const st = { aoa: 6, thickness: 0.1, camber: 0.06, kutta: true, view: 'cp', tracers: !reduced };
+
+  const dpr = Math.min(2, devicePixelRatio || 1);
+  const W = Math.round(canvas.clientWidth * dpr) || 1200, H = Math.round(W * 0.42);
+  canvas.width = W; canvas.height = H;
+  const XR = 3.3, YR = (XR * H) / W;
+  const px = (x) => ((x + XR) / (2 * XR)) * W, py = (y) => ((YR - y) / (2 * YR)) * H;
+  const bg = Object.assign(document.createElement('canvas'), { width: W, height: H });
+  const bctx = bg.getContext('2d');
+  const GW = 320, GH = Math.round((GW * H) / W);
+  const grid = Object.assign(document.createElement('canvas'), { width: GW, height: GH });
+  const gctx = grid.getContext('2d'), img = gctx.createImageData(GW, GH);
+  let f, colors;
+
+  const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  function lut(stops) {
+    const c = stops.map(hex), out = new Uint8ClampedArray(768);
+    for (let i = 0; i < 256; i++) {
+      const t = (i / 255) * (c.length - 1), k = Math.min(c.length - 2, Math.floor(t)), q = t - k;
+      for (let j = 0; j < 3; j++) out[i * 3 + j] = c[k][j] + (c[k + 1][j] - c[k][j]) * q;
+    }
+    return out;
+  }
+  function theme() {
+    const dark = getComputedStyle(document.documentElement).colorScheme === 'dark';
+    colors = dark
+      ? { div: lut(['#4b9dff', '#1b4a86', '#0f191e', '#8a3418', '#ff8a5c']), seq: lut(['#0f191e', '#10345f', '#0064e0', '#38bdf8', '#e6f7ff']), body: '#f1f4f7', line: 'rgba(255,255,255,0.35)', dot: 'rgba(255,255,255,0.7)', axis: '#93a2b0' }
+      : { div: lut(['#0457cb', '#7fb2ff', '#f8fafc', '#ffab7a', '#d7263d']), seq: lut(['#ffffff', '#d4e6ff', '#4b9dff', '#0457cb', '#0a1f4a']), body: '#0a1317', line: 'rgba(10,19,23,0.35)', dot: 'rgba(10,19,23,0.45)', axis: '#5d6c7b' };
+    const m = st.view === 'speed' ? colors.seq : colors.div;
+    $('legend').style.background = `linear-gradient(90deg, ${[0, 64, 128, 192, 255].map((i) => `rgb(${m[i * 3]},${m[i * 3 + 1]},${m[i * 3 + 2]})`).join(',')})`;
+  }
+
+  // Everything that depends on the parameters: field colours, streamlines, outline, Cp plot.
+  function rebuild() {
+    f = makeAirfoil({ thickness: st.thickness, camber: st.camber, aoaDeg: st.aoa, kutta: st.kutta });
+    const m = st.view === 'speed' ? colors.seq : colors.div, d = img.data, solid = new Uint8Array(GW * GH);
+    for (let j = 0; j < GH; j++) for (let i = 0; i < GW; i++) {
+      const x = -XR + ((i + 0.5) / GW) * 2 * XR, y = YR - ((j + 0.5) / GH) * 2 * YR, p = (j * GW + i) * 4;
+      const v = velocity(f, x, y);
+      let c;
+      if (!v) { solid[j * GW + i] = 1; continue; }
+      if (st.view === 'speed') c = Math.min(255, (Math.hypot(v[0], v[1]) / 2) * 255) | 0;
+      else c = (127.5 - 127.5 * Math.tanh(cp(v[0], v[1]) * 0.9)) | 0; // suction → warm, stagnation → blue
+      d[p] = m[c * 3]; d[p + 1] = m[c * 3 + 1]; d[p + 2] = m[c * 3 + 2]; d[p + 3] = 255;
+    }
+    // Fill cells inside the body with the average of filled neighbours (a few passes), so smoothing has no hard edge.
+    for (let pass = 0, left = 1; pass < 12 && left; pass++) {
+      left = 0;
+      const next = solid.slice();
+      for (let j = 0; j < GH; j++) for (let i = 0; i < GW; i++) {
+        const k = j * GW + i;
+        if (!solid[k]) continue;
+        let r = 0, g = 0, b = 0, n = 0;
+        for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const ii = i + di, jj = j + dj;
+          if (ii < 0 || jj < 0 || ii >= GW || jj >= GH || solid[jj * GW + ii]) continue;
+          const q = (jj * GW + ii) * 4; r += d[q]; g += d[q + 1]; b += d[q + 2]; n++;
+        }
+        if (n) { const p = k * 4; d[p] = r / n; d[p + 1] = g / n; d[p + 2] = b / n; d[p + 3] = 255; next[k] = 0; } else left = 1;
+      }
+      solid.set(next);
+    }
+    gctx.putImageData(img, 0, 0);
+    bctx.imageSmoothingEnabled = true;
+    bctx.drawImage(grid, 0, 0, W, H);
+    // Streamlines: fixed-length steps along the velocity direction from seeds upstream.
+    bctx.strokeStyle = colors.line; bctx.lineWidth = 1 * dpr; bctx.lineJoin = 'round';
+    for (let s = 0; s < 21; s++) {
+      let x = -XR, y = -YR + ((s + 0.5) / 21) * 2 * YR;
+      bctx.beginPath(); bctx.moveTo(px(x), py(y));
+      for (let k = 0; k < 700; k++) {
+        const a = velocity(f, x, y); if (!a) break;
+        const n1 = Math.hypot(a[0], a[1]) || 1, hx = x + 0.0125 * a[0] / n1, hy = y + 0.0125 * a[1] / n1;
+        const b = velocity(f, hx, hy); if (!b) break;
+        const n2 = Math.hypot(b[0], b[1]) || 1;
+        x += 0.025 * b[0] / n2; y += 0.025 * b[1] / n2;
+        if (x > XR || Math.abs(y) > YR) { bctx.lineTo(px(x), py(y)); break; }
+        bctx.lineTo(px(x), py(y));
+      }
+      bctx.stroke();
+    }
+    const o = outline(f);
+    bctx.fillStyle = colors.body; bctx.beginPath();
+    o.forEach(([x, y], i) => (i ? bctx.lineTo(px(x), py(y)) : bctx.moveTo(px(x), py(y))));
+    bctx.closePath(); bctx.fill();
+
+    $('cl').innerHTML = `C<sub>L</sub> ${f.cl.toFixed(2)}`;
+    $('alpha').textContent = `α ${st.aoa.toFixed(1)}°`;
+    $('shape').textContent = `t/c ≈ ${Math.round(st.thickness * 130)}% · camber ≈ ${(st.camber * 50).toFixed(1)}%`;
+    $('aoa-val').textContent = `${st.aoa}°`;
+    $('t-val').textContent = `${Math.round(st.thickness * 130)}%`;
+    $('c-val').textContent = `${(st.camber * 50).toFixed(1)}%`;
+    plotCp();
+    if (!st.tracers) draw();
+  }
+
+  function plotCp() {
+    const { upper, lower } = surfaceCp(f);
+    const all = [...upper, ...lower].map((p) => -p[1]).filter(Number.isFinite);
+    const top = Math.min(8, Math.max(1.5, Math.ceil(Math.max(...all)))), bot = -1;
+    const X = (x) => 34 + x * 276, Y = (v) => 14 + ((top - v) / (top - bot)) * 160;
+    const pts = (arr) => arr.filter((p) => Number.isFinite(p[1]) && -p[1] <= top).map((p) => `${X(p[0]).toFixed(1)},${Y(-p[1]).toFixed(1)}`).join(' ');
+    $('cp-up').setAttribute('points', pts(upper)); $('cp-up').setAttribute('stroke', 'var(--primary)');
+    $('cp-lo').setAttribute('points', pts(lower)); $('cp-lo').setAttribute('stroke', '#f2994a');
+    let g = `<line x1="34" x2="310" y1="${Y(0)}" y2="${Y(0)}" stroke="${colors.axis}" stroke-opacity=".5"/>`;
+    for (let v = bot; v <= top; v++) g += `<text x="28" y="${Y(v) + 4}" text-anchor="end" font-size="10" fill="${colors.axis}">${v}</text>`;
+    g += `<text x="34" y="194" font-size="10" fill="${colors.axis}">0</text><text x="310" y="194" text-anchor="end" font-size="10" fill="${colors.axis}">x/c = 1</text>`;
+    $('cp-grid').innerHTML = g;
+  }
+
+  // Tracers
+  const NT = 260, tx = new Float32Array(NT), ty = new Float32Array(NT);
+  const seed = (k, anywhere) => { tx[k] = anywhere ? -XR + Math.random() * 2 * XR : -XR - Math.random() * 0.3; ty[k] = -YR + Math.random() * 2 * YR; };
+  for (let k = 0; k < NT; k++) seed(k, true);
+  function draw() {
+    ctx.drawImage(bg, 0, 0);
+    if (!st.tracers) return;
+    ctx.strokeStyle = colors.dot; ctx.lineWidth = 1.8 * dpr; ctx.lineCap = 'round';
+    ctx.beginPath();
+    for (let k = 0; k < NT; k++) {
+      const v = velocity(f, tx[k], ty[k]);
+      if (!v || tx[k] > XR) { seed(k); continue; }
+      tx[k] += v[0] * 0.012; ty[k] += v[1] * 0.012;
+      // A short streak behind each tracer, longer where the flow is faster.
+      ctx.moveTo(px(tx[k] - v[0] * 0.07), py(ty[k] - v[1] * 0.07));
+      ctx.lineTo(px(tx[k]), py(ty[k]));
+    }
+    ctx.stroke();
+  }
+  let visible = false, dirty = true;
+  function frame() {
+    if (dirty) { rebuild(); dirty = false; }
+    if (visible && !document.hidden && st.tracers) draw();
+    requestAnimationFrame(frame);
+  }
+
+  // Controls
+  el.querySelectorAll('[data-in]').forEach((inp) => inp.addEventListener('input', () => { st[inp.dataset.in] = Number(inp.value); dirty = true; }));
+  el.querySelector('[data-group="view"]').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    st.view = b.dataset.v;
+    el.querySelectorAll('[data-group="view"] button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    theme(); dirty = true;
+  });
+  el.querySelectorAll('[data-act]').forEach((b) => b.addEventListener('click', () => {
+    const k = b.dataset.act; st[k] = !st[k]; b.setAttribute('aria-pressed', String(st[k]));
+    dirty = true;
+  }));
+  // Drag vertically on the picture to change α.
+  let drag = null;
+  // Mouse: drag up/down. Touch: drag sideways (vertical swipes keep scrolling the page, see touch-action: pan-y).
+  if (matchMedia('(pointer: coarse)').matches) $('hint').textContent = 'Swipe sideways on the airfoil to pitch it';
+  canvas.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, a: st.aoa, touch: e.pointerType !== 'mouse' }; canvas.setPointerCapture(e.pointerId); $('hint').textContent = ''; });
+  canvas.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    const delta = drag.touch ? (e.clientX - drag.x) * 0.08 : (drag.y - e.clientY) * 0.12;
+    st.aoa = Math.max(-10, Math.min(16, Math.round((drag.a + delta) * 2) / 2));
+    el.querySelector('[data-in="aoa"]').value = st.aoa; dirty = true;
+  });
+  const end = () => (drag = null);
+  canvas.addEventListener('pointerup', end); canvas.addEventListener('pointercancel', end);
+
+  new IntersectionObserver(([en]) => (visible = en.isIntersecting)).observe(canvas);
+  const retheme = () => { theme(); dirty = true; };
+  window.addEventListener('themechange', retheme);
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme);
+  theme();
+  requestAnimationFrame(frame);
+</script>

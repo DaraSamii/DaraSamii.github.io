@@ -1,0 +1,19 @@
+---
+import { publications } from '../data/research.js';
+---
+<div class="grid">
+  {publications.map((p) => (
+    <article class="card pub reveal">
+      <div class="pub-year">{p.year}</div>
+      <div>
+        <span class="tag tag-cobalt">{p.type}</span>
+        <h3 style="margin-top:10px">{p.title}</h3>
+        <p class="authors" set:html={p.authors} />
+        <p class="venue">{p.venue}</p>
+        <div class="links">
+          {p.links.map((l) => <a class="link-chip" href={l.href} target="_blank" rel="noopener"><i class={l.icon} aria-hidden="true"></i> {l.label}</a>)}
+        </div>
+      </div>
+    </article>
+  ))}
+</div>

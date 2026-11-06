@@ -1,0 +1,44 @@
+---
+import { profile, socials, cvHref, coffee } from '../data/profile.js';
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>{profile.name}</h4>
+        <p>{profile.role}<br />{profile.location}</p>
+        <p style="margin-top:12px"><a href={`mailto:${profile.email}`}>{profile.email}</a></p>
+      </div>
+      <div>
+        <h4>Work</h4>
+        <ul>
+          <li><a href="/research/">Research</a></li>
+          <li><a href="/rocketry/">Rocketry</a></li>
+          <li><a href="/teaching/">Teaching &amp; notes</a></li>
+          <li><a href="/projects/">Fun projects</a></li>
+          <li><a href={cvHref} target="_blank" rel="noopener">CV (PDF)</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Personal</h4>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/piano/">Piano</a></li>
+          <li><a href="/world/">World</a></li>
+          <li><a href="/#airfoil">Airfoil playground</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <ul>
+          {socials.map((s) => <li><a href={s.href} target="_blank" rel="noopener"><i class={s.icon} aria-hidden="true" style={`color:${s.color}`}></i> {s.label}</a></li>)}
+          <li><a href={coffee.href} target="_blank" rel="noopener"><i class="fas fa-mug-hot" aria-hidden="true" style="color:#f2a918"></i> {coffee.label}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; {year} {profile.name}. Built with ☕ and curiosity.</span>
+    </div>
+  </div>
+</footer>

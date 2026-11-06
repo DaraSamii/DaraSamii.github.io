@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="World" description="An interactive map of the countries and cities Dara Rahmat Samii has traveled to." fullBleed>
+  <Fragment slot="head"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" /></Fragment>
+  <h1 class="sr-only">Places I have travelled</h1>
+  <div id="worldMap" class="world-map"></div>
+  <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script is:inline>
+    // Travel data lives in public/assets/data/travels.json: edit that file to add trips.
+    // Each entry needs city, country, lat, lng, and optional year / notes.
+    (function () {
+      const css = getComputedStyle(document.documentElement);
+      const MARKER = css.getPropertyValue('--primary').trim() || '#0064e0';
+      const BORDER = css.getPropertyValue('--canvas').trim() || '#ffffff';
+      const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+      function init(travels) {
+        const map = L.map('worldMap', { worldCopyJump: true, minZoom: 2, maxBoundsViscosity: 1.0, zoomControl: false }).setView([20, 10], 2);
+        // Keep vertical panning where Web Mercator tiles exist; longitude stays unbounded for seamless wrap.
+        map.setMaxBounds(L.latLngBounds(L.latLng(-85.06, -Infinity), L.latLng(85.06, Infinity)));
+        L.control.zoom({ position: 'bottomleft' }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', subdomains: 'abc', maxZoom: 19,
+        }).addTo(map);
+        travels.forEach((t) => {
+          L.circleMarker([t.lat, t.lng], { radius: 6, color: BORDER, weight: 1.5, fillColor: MARKER, fillOpacity: 1 })
+            .addTo(map)
+            .bindPopup(`<strong>${esc(t.city)}</strong>, ${esc(t.country)}${t.year ? ` &middot; ${esc(t.year)}` : ''}${t.notes ? `<br>${esc(t.notes)}` : ''}`);
+        });
+        window.addEventListener('resize', () => map.invalidateSize());
+      }
+      fetch('/assets/data/travels.json').then((r) => r.json()).then(init).catch((err) => { console.error('World map: could not load travel data:', err); init([]); });
+    })();
+  </script>
+</Base>

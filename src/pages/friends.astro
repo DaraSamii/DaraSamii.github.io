@@ -1,0 +1,27 @@
+---
+// Not linked from the nav (same as the old site) and excluded from the sitemap.
+import Base from '../layouts/Base.astro';
+import { friends } from '../data/personal.js';
+---
+<Base title="Friends">
+  <Fragment slot="head"><meta name="robots" content="noindex" /></Fragment>
+  <section class="page-hero">
+    <div class="container">
+      <span class="kicker">Friends</span>
+      <h1>Friends &amp; Collaborators</h1>
+      <p class="lead">The amazing people I've had the pleasure of working with</p>
+    </div>
+  </section>
+  <section class="section" style="padding-top:8px">
+    <div class="container grid grid-4">
+      {friends.map((f) => (
+        <div class="card friend reveal">
+          <img src={f.photo} alt={f.name} loading="lazy" />
+          <h3>{f.name}</h3>
+          <p class="meta">{f.role}</p>
+          <p class="meta">{f.met}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

@@ -1,160 +1,69 @@
-# Dara Rahmat Samii - Personal Website
+# darasamii.com
 
-A modern, responsive personal website for GitHub Pages with rotating profile photos.
+Personal site of Dara Rahmat Samii: PhD researcher in computational fluid dynamics (McGill), rocketry CFD, teaching notes, and an interactive Joukowski-airfoil playground.
 
-## 🚀 Quick Start
+Built with [Astro](https://astro.build) (static output). Hosted on **Cloudflare Pages** at <https://darasamii.com>; `darasamii.github.io` redirects there.
 
-1. **Rename this folder** to `DaraSamii.github.io`
-2. **Add your images** (see folder structure below)
-3. **Push to GitHub** as a repository named `DaraSamii.github.io`
-4. Your site will be live at `https://DaraSamii.github.io`
+## Run it
 
-## 📁 Folder Structure - FILL IN YOUR IMAGES
-
-```
-DaraSamii.github.io/
-│
-├── index.html
-├── README.md
-│
-├── css/
-│   └── style.css
-│
-├── js/
-│   └── main.js
-│
-├── pages/
-│   ├── blog.html          ← Your Virgool posts are already linked!
-│   ├── piano.html         ← Add your YouTube video IDs
-│   └── friends.html       ← Add your friends
-│
-└── assets/
-    └── images/
-        │
-        ├── logos/                  ← YOU ALREADY HAVE THESE ✓
-        │   ├── concordia-logo.png
-        │   ├── ut-logo.png
-        │   └── iust-logo.png
-        │
-        ├── profile/                ← 🔄 ROTATING PROFILE PHOTOS
-        │   ├── 1.jpg               ← Add your photos here!
-        │   ├── 2.jpg               ← Name them 1.jpg, 2.jpg, 3.jpg...
-        │   ├── 3.jpg
-        │   ├── 4.jpg
-        │   └── 5.jpg               ← Default: 5 photos, rotates every 4 seconds
-        │
-        ├── projects/               ← 🔬 PROJECT SCREENSHOTS
-        │   ├── meshgnn.png
-        │   ├── cr25.png
-        │   ├── rotameter.png
-        │   ├── pid-ball.png
-        │   ├── distillation.png
-        │   └── fer.png
-        │
-        ├── friends/                ← 👥 FRIEND PHOTOS
-        │   ├── friend1.jpg
-        │   ├── friend2.jpg
-        │   ├── friend3.jpg
-        │   └── friend4.jpg
-        │
-        ├── piano/                  ← 🎹 PIANO PHOTOS
-        │   ├── piano1.jpg
-        │   ├── piano2.jpg
-        │   └── piano3.jpg
-        │
-        └── blog/                   ← 📝 BLOG POST IMAGES
-            ├── canada.jpg          ← For "شروعی نو در کانادا"
-            ├── visa.jpg            ← For "معافیت تحصیلی"
-            ├── game-theory.jpg     ← For "نظریه بازی‌ها"
-            ├── ielts.jpg           ← For "آیلتس"
-            ├── olympiad.jpg        ← For "المپیاد"
-            └── boogie-woogie.jpg   ← For "Boogie Woogie"
+```sh
+npm install
+npm run dev      # http://localhost:4321
+npm test         # airfoil-playground math tests (node:test)
+npm run build    # static site in dist/
 ```
 
-## 🔄 Rotating Profile Photo Configuration
+Node 22 (see `.nvmrc`). Astro is pinned to v6 because Astro 7 needs Node ≥ 22.23.4.
 
-Edit `js/main.js` to customize:
+## Where things live
 
-```javascript
-const CONFIG = {
-    profilePhotoCount: 5,        // Number of photos (1.jpg to 5.jpg)
-    photoChangeInterval: 4000,   // 4 seconds between changes
-    photoExtension: 'jpg'        // File extension
-};
+```
+src/data/            ← edit content here (no HTML needed)
+  profile.js           name, headline, socials, nav, hero stats
+  cv.js                education, experience, awards, certifications, skills
+  research.js          research themes, publications, talks, research software
+  projects.js          every project. Shown on /rocketry if `rocketry: true`, on /research if listed in a research theme; /projects shows only the rest
+  teaching.js          teaching roles and courses
+  personal.js          blog posts, piano videos, friends (unlinked page)
+src/content/notes/   ← teaching notes: one Markdown file each, LaTeX math with $…$ / $$…$$
+src/pages/           one file per route (/, /research, /rocketry, /teaching, /projects, /blog, /piano, /world, /friends)
+src/components/      Nav, Footer, ProjectCard (grid card), ProjectFeature (big gallery block), PubList, ImageModal, AirfoilPlayground
+src/lib/joukowski.js exact potential flow around a Joukowski airfoil, used by the playground (+ joukowski.test.js)
+src/styles/global.css  design tokens (light + dark) from docs/DESIGN.md
+public/              served as-is: images, CV/cv.pdf + CV/cv-extended.pdf, travels.json, _redirects, robots.txt
+docs/DESIGN.md       Meta-inspired design system (npx getdesign@latest add meta)
 ```
 
-## 🎬 Adding YouTube Videos
+### Add a teaching note
 
-In `pages/piano.html`, replace `VIDEO_ID_X` with your actual YouTube video IDs:
+Create `src/content/notes/my-note.md`:
 
-```html
-<iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" ...>
-```
-
-To get a video ID: `https://www.youtube.com/watch?v=ABC123` → ID is `ABC123`
-
-## 📝 Your Blog Posts (Already Linked!)
-
-Your Virgool posts are already integrated:
-- شروعی نو - این بار در کانادا
-- مراحل دریافت معافیت تحصیلی 1402
-- مسیر راه یادگیری نظریه بازی‌ها
-- Self-Study آزمون آیلتس
-- راهنمای المپاد دانشجویی مهندسی شیمی
-- شروع موسیقی Boogie Woogie
-
-## 👥 Adding Friends
-
-Edit `pages/friends.html` and duplicate the friend-card:
-
-```html
-<div class="friend-card">
-    <div class="friend-photo">
-        <img src="../assets/images/friends/friend1.jpg" alt="Name">
-    </div>
-    <h3>Friend's Name</h3>
-    <p>Their Role / University</p>
-    <p class="exp-date">How you met</p>
-</div>
-```
-
-## 🌐 Deploying to GitHub Pages
-
-1. Create a new repository named exactly: `DaraSamii.github.io`
-2. Push all files to the `main` branch
-3. Go to Settings → Pages → Source: Deploy from branch (`main`)
-4. Wait a few minutes
-5. Visit `https://DaraSamii.github.io`
-
-## ✨ Features
-
-- ✅ **Rotating profile photos** - Randomly swaps every 4 seconds
-- ✅ Fully responsive (mobile, tablet, desktop)
-- ✅ Smooth scroll navigation
-- ✅ Animated elements on scroll
-- ✅ Dark theme with gradient accents
-- ✅ RTL support for Persian blog posts
-- ✅ YouTube video embeds
-- ✅ Mobile hamburger menu
-
-## 🛠️ Customization
-
-### Change Colors
-Edit CSS variables in `css/style.css`:
-```css
-:root {
-    --color-primary: #6366f1;
-    --color-accent: #f59e0b;
-    --color-accent-pink: #ec4899;
-}
-```
-
-### Update Google Scholar
-Replace `YOUR_ID` in `index.html`:
-```html
-<a href="https://scholar.google.com/citations?user=YOUR_ACTUAL_ID" ...>
-```
-
+```md
+---
+title: Bernoulli vs. momentum
+description: One sentence for the card.
+course: Fluid Mechanics
+date: 2026-12-01
+tags: [inviscid, control volume]
 ---
 
-Built with ☕ and curiosity by Dara Rahmat Samii
+Text with inline $p + \tfrac12\rho u^2$ and display math:
+
+$$\nabla\cdot\mathbf u = 0$$
+```
+
+It appears on `/teaching` and at `/teaching/my-note/`. Add `draft: true` to hide it.
+
+### Add a trip to the World map
+
+Append to `public/assets/data/travels.json`: `{ "city", "country", "lat", "lng", "year", "notes" }`.
+
+### Update the CV
+
+Compile `CV/main.tex` → `public/CV/cv.pdf` and `CV/main_extended.tex` (every section) → `public/CV/cv-extended.pdf`.
+If fontawesome5 fails: `pdflatex '\pdfmapfile{+fontawesome5.map}\input{main_extended}'`.
+
+## Deploy
+
+- **Cloudflare Pages** (darasamii.com): connected to this repo; build `npm run build`, output `dist`, env `NODE_VERSION=22`. Every push to `main` deploys. `public/_redirects` maps the old `/pages/*.html` URLs.
+- **GitHub Pages** (darasamii.github.io): `.github/workflows/github-pages.yml` builds the same site; an inline script sends github.io visitors to darasamii.com with the same path. Requires Settings → Pages → Source = GitHub Actions.

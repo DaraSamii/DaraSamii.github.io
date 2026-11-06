@@ -1,0 +1,46 @@
+---
+// Large project block for Research/Rocketry: big gallery with thumbnails, full write-up, links.
+const { p, flip = false } = Astro.props;
+const imgs = p.images ?? [];
+---
+<article class:list={['feature reveal', { flip }]} id={p.slug}>
+  <div class="feature-gallery" data-gallery>
+    {imgs.length ? (
+      <>
+        <div class="feature-stage">
+          <button class="feature-main" type="button" aria-label={`Open ${p.title} images full screen`}>
+            <img src={imgs[0].src} alt={imgs[0].alt} loading="lazy" decoding="async" />
+          </button>
+          {imgs.length > 1 && (
+            <>
+              <button class="gal-nav gal-prev" type="button" aria-label="Previous image"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+              <button class="gal-nav gal-next" type="button" aria-label="Next image"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+            </>
+          )}
+          <span class="feature-count" aria-live="polite"><i class="fas fa-images" aria-hidden="true"></i> <span data-idx>1</span> / {imgs.length}</span>
+        </div>
+        {imgs.length > 1 && (
+          <div class="feature-thumbs" role="group" aria-label="Images">
+            {imgs.map((im, i) => (
+              <button type="button" class="thumb" aria-pressed={i === 0 ? 'true' : 'false'} data-src={im.src} data-alt={im.alt} aria-label={im.alt}>
+                <img src={im.src} alt="" loading="lazy" decoding="async" />
+              </button>
+            ))}
+          </div>
+        )}
+      </>
+    ) : (
+      <div class="feature-main placeholder"><i class={p.icon ?? 'fas fa-flask'} aria-hidden="true"></i></div>
+    )}
+  </div>
+  <div class="feature-body">
+    {p.featured && <span class="kicker">Featured</span>}
+    <h3>{p.title}</h3>
+    <p set:html={p.summary} />
+    {p.details && <p set:html={p.details} />}
+    <div class="tags">{p.tech.map((t) => <span class="tag">{t}</span>)}</div>
+    <div class="links">
+      {p.links.map((l) => <a class="link-chip" href={l.href} target="_blank" rel="noopener"><i class={l.icon} aria-hidden="true"></i> {l.label}</a>)}
+    </div>
+  </div>
+</article>

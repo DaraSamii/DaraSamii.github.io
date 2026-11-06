@@ -1,0 +1,37 @@
+---
+const { p } = Astro.props;
+const imgs = p.images ?? [];
+---
+<article class="card card-hover project reveal" data-cats={p.category.join(' ')} id={p.slug}>
+  <div class:list={['project-media', { white: p.whiteBg }]} data-slides={imgs.length ? '' : undefined}>
+    {imgs.length ? (
+      <>
+        {imgs.map((im, i) => <img src={im.src} alt={im.alt} loading="lazy" decoding="async" class={i === 0 ? 'active' : undefined} />)}
+        {imgs.length > 1 && (
+          <>
+            <button class="slide-nav slide-prev" type="button" aria-label="Previous image">‹</button>
+            <button class="slide-nav slide-next" type="button" aria-label="Next image">›</button>
+            <div class="slide-dots" aria-hidden="true">{imgs.map((_, i) => <span class={i === 0 ? 'on' : undefined} />)}</div>
+          </>
+        )}
+      </>
+    ) : (
+      <div class="placeholder"><i class={p.icon ?? 'fas fa-flask'} aria-hidden="true"></i></div>
+    )}
+  </div>
+  <div class="project-body">
+    {p.featured && <span class="kicker">Featured</span>}
+    <h3>{p.title}</h3>
+    <p set:html={p.summary} />
+    <div class="tags">{p.tech.map((t) => <span class="tag">{t}</span>)}</div>
+    {p.details && (
+      <details class="more">
+        <summary>Details</summary>
+        <p set:html={p.details} />
+      </details>
+    )}
+    <div class="links">
+      {p.links.map((l) => <a class="link-chip" href={l.href} target="_blank" rel="noopener"><i class={l.icon} aria-hidden="true"></i> {l.label}</a>)}
+    </div>
+  </div>
+</article>

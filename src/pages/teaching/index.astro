@@ -1,0 +1,119 @@
+---
+import Base from '../../layouts/Base.astro';
+import ImageModal from '../../components/ImageModal.astro';
+import { getCollection } from 'astro:content';
+import { teachingRoles, courses, materials } from '../../data/teaching.js';
+const notes = (await getCollection('notes', (n) => !n.data.draft)).sort((a, b) => b.data.date - a.data.date);
+const fmt = (d) => d.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
+---
+<Base title="Teaching" description="Teaching by Dara Rahmat Samii: 1,200+ TA hours in fluid mechanics, heat transfer, thermodynamics and CFD at Concordia (Teaching Excellence Award 2026), a high-power rocketry certification handbook and workshop slides.">
+  <section class="page-hero">
+    <div class="container">
+      <span class="kicker">Teaching</span>
+      <h1>Fluid mechanics and rockets, explained carefully</h1>
+      <p class="lead">1,200+ hours as a teaching assistant across labs and tutorials at Concordia, recognised with the <strong>Teaching Excellence Award for Teaching Assistants</strong> (May 2026). I also write handbooks and workshops that take students from zero to a certification flight.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#award"><i class="fas fa-award" aria-hidden="true" style="color:#f2a918"></i> The award</a>
+        <a class="btn btn-secondary" href="#materials">Handbook &amp; slides</a>
+        <a class="btn btn-secondary" href="#courses">Courses</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="award">
+    <div class="container">
+      <div class="section-head"><div><span class="kicker">May 28, 2026 · Concordia University</span><h2>Teaching Excellence Award</h2>
+        <p>The Gina Cody School of Engineering and Computer Science Teaching Excellence Award, <em>Excellence in Teaching by a Teaching Assistant 2025–2026</em>, Department of Mechanical, Industrial and Aerospace Engineering, for outstanding contributions in teaching.</p></div></div>
+      <div class="award-mosaic" data-photos>
+        <figure class="award-main">
+          <button type="button" aria-label="Open photo: award certificate"><img src="/assets/images/teaching/award-certificate.jpg" alt="Teaching Excellence Award certificate presented to Dara Rahmat Samii" loading="lazy" /></button>
+          <figcaption>The certificate</figcaption>
+        </figure>
+        <figure>
+          <button type="button" aria-label="Open photo: award ceremony"><img src="/assets/images/teaching/award-ceremony.jpg" alt="Receiving the award on stage at the Gina Cody School ceremony" loading="lazy" /></button>
+          <figcaption>On stage at the ceremony</figcaption>
+        </figure>
+        <figure>
+          <button type="button" aria-label="Open photo: award recipients"><img src="/assets/images/teaching/award-recipients.jpg" alt="The 2025–2026 Teaching Excellence Award recipients of the Gina Cody School" loading="lazy" /></button>
+          <figcaption>2025–2026 recipients, Gina Cody School</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="materials">
+    <div class="container">
+      <div class="section-head"><div><span class="kicker">Teaching materials</span><h2>Handbook &amp; workshop</h2><p>Free to read and share with your team.</p></div></div>
+      <div class="features">
+        {materials.map((m, i) => (
+          <article class:list={['feature material reveal', { flip: i % 2 === 1 }]}>
+            <a class="material-cover" href={m.href} target="_blank" rel="noopener" aria-label={`Open ${m.title} (PDF)`}>
+              <img src={m.cover} alt={`Cover of ${m.title}`} loading="lazy" />
+            </a>
+            <div class="feature-body">
+              <span class="kicker">{m.kind}</span>
+              <h3>{m.title}</h3>
+              <p>{m.text}</p>
+              <ol class="chapters">{m.chapters.map((c) => <li>{c}</li>)}</ol>
+              <div class="links">
+                <a class="btn btn-primary btn-sm" href={m.href} target="_blank" rel="noopener"><i class="fas fa-book-open" aria-hidden="true"></i> Read the PDF</a>
+                <a class="btn btn-secondary btn-sm" href={m.href} download><i class="fas fa-download" aria-hidden="true"></i> Download</a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {notes.length > 0 && (
+    <section class="section section-alt" id="notes">
+      <div class="container">
+        <div class="section-head"><div><span class="kicker">Notes</span><h2>Course notes</h2></div></div>
+        <div class="grid grid-3">
+          {notes.map((n) => (
+            <a class="card card-hover reveal" href={`/teaching/${n.id}/`} style="color:inherit;text-decoration:none;display:grid;gap:10px">
+              <span class="kicker">{n.data.course}</span>
+              <h3>{n.data.title}</h3>
+              <p class="meta">{n.data.description}</p>
+              <span class="meta">{fmt(n.data.date)}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class:list={['section', { 'section-alt': notes.length === 0 }]} id="courses">
+    <div class="container">
+      <div class="section-head"><div><span class="kicker">Courses</span><h2>What I teach</h2>{notes.length === 0 && <p>Course notes for these are on the way.</p>}</div></div>
+      <div class="grid grid-4">
+        {courses.map((c) => (
+          <div class="card reveal row" style="padding:18px 20px;align-items:center">
+            <div class="card-icon"><i class={c.icon} aria-hidden="true"></i></div>
+            <div><h3 style="font-size:16px">{c.name}</h3><p class="meta">{c.kind}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="experience">
+    <div class="container">
+      <div class="section-head"><div><span class="kicker">Experience</span><h2>Teaching roles</h2></div></div>
+      <div class="grid">
+        {teachingRoles.map((r) => (
+          <div class="card reveal">
+            <div class="row" style="justify-content:space-between;flex-wrap:wrap">
+              <div><h3>{r.role}</h3><p class="meta">{r.org}</p></div>
+              <span class="tag">{r.date}</span>
+            </div>
+            {r.highlight && <p style="margin-top:12px"><span class="tag tag-cobalt"><i class="fas fa-award" aria-hidden="true"></i> {r.highlight}</span></p>}
+            <ul>{r.points.map((p) => <li>{p}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  <ImageModal />
+</Base>
