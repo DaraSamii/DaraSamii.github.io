@@ -66,4 +66,4 @@ If fontawesome5 fails: `pdflatex '\pdfmapfile{+fontawesome5.map}\input{main_exte
 ## Deploy
 
 - **Cloudflare Workers (static assets)** (darasamii.com): Git-connected Worker `darasamii-website`; build `npm run build`, deploy `npx wrangler deploy` (config: `wrangler.jsonc`, serves `dist/`). Every push to `main` deploys. `public/_redirects` maps the old `/pages/*.html` URLs.
-- **GitHub Pages** (darasamii.github.io): `.github/workflows/github-pages.yml` builds the same site; an inline script sends github.io visitors to darasamii.com with the same path. Requires Settings → Pages → Source = GitHub Actions.
+- **GitHub Pages** (darasamii.github.io): serves only the root `index.html` + `404.html`, which forward visitors to darasamii.com (keeping the path). `.nojekyll` stops GitHub running Jekyll on the repo. No Actions needed. Settings → Pages → Source stays "Deploy from a branch: main / (root)".
