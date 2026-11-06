@@ -202,7 +202,13 @@ p { margin: 0; }
 .tunnel-stage canvas { display: block; width: 100%; height: auto; cursor: ns-resize; }
 .tunnel-hud { position: absolute; left: 14px; top: 14px; display: flex; gap: 8px; flex-wrap: wrap; pointer-events: none; }
 .hud-chip { background: rgba(10, 19, 23, 0.72); color: #f1f4f7; border-radius: var(--r-full); padding: 6px 12px; font: 500 12px var(--font-mono); }
-.tunnel-hint { position: absolute; right: 14px; bottom: 12px; color: rgba(241, 244, 247, 0.8); font: 500 12px var(--font-body); pointer-events: none; }
+.tunnel-hint { position: absolute; right: 14px; bottom: 12px; max-width: calc(100% - 28px); pointer-events: none;
+  /* dark pill so it stays readable on every colormap (Turbo's greens/yellows included) */
+  background: rgba(10, 19, 23, 0.82); color: #ffffff; border-radius: var(--r-full); padding: 6px 12px 6px 30px;
+  font: 600 12.5px/1.3 var(--font-display); letter-spacing: 0.01em; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); }
+.tunnel-hint::before { content: '↕'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #ffdd00; font-weight: 700; }
+.tunnel-hint:empty { display: none; }
+@media (pointer: coarse) { .tunnel-hint::before { content: '↔'; } }
 .tunnel-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 20px 28px; padding: 22px 24px 24px; }
 .ctrl-label { display: flex; justify-content: space-between; font: 700 12px var(--font-body); color: var(--steel); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
 .ctrl-label output { font-family: var(--font-mono); color: var(--ink-deep); text-transform: none; letter-spacing: 0; }
