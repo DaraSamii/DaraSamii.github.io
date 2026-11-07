@@ -19,6 +19,33 @@ document.querySelectorAll('.theme-toggle').forEach((btn) => {
   });
 });
 
+// Nav bubble: glide to the clicked link, then open the page. A second click re-targets instead of
+// cancelling (cross-page view transitions broke on fast double clicks), so nothing ever flashes.
+const pill = document.querySelector('.nav-pill');
+let navTimer = 0;
+document.querySelectorAll('.nav-link').forEach((link) => link.addEventListener('click', (e) => {
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button || link.getAttribute('aria-current') === 'page') return;
+  if (!pill || reduced) return; // plain navigation
+  e.preventDefault();
+  const home = pill.parentElement.getBoundingClientRect();
+  const to = link.getBoundingClientRect();
+  pill.style.transform = `translate(${to.left - home.left}px, ${to.top - home.top}px)`;
+  pill.style.width = `${to.width}px`;
+  pill.style.height = `${to.height}px`;
+  document.querySelectorAll('.nav-link').forEach((a) => {
+    a.classList.toggle('to-active', a === link);
+    a.classList.toggle('from-active', a !== link && a.getAttribute('aria-current') === 'page');
+  });
+  clearTimeout(navTimer);
+  navTimer = setTimeout(() => { location.href = link.href; }, 220);
+}));
+// Coming back with the browser's back button restores this page from cache with the bubble mid-glide: reset it.
+addEventListener('pageshow', (e) => {
+  if (!e.persisted || !pill) return;
+  pill.removeAttribute('style');
+  document.querySelectorAll('.to-active, .from-active').forEach((a) => a.classList.remove('to-active', 'from-active'));
+});
+
 // Language switch: slide the knob to the other language, then go to the same page in that language.
 document.querySelectorAll('[data-lang-switch]').forEach((a) => a.addEventListener('click', (e) => {
   if (reduced || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;

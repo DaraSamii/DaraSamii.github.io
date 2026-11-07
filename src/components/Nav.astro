@@ -25,10 +25,9 @@ const alt = alternates(Astro.url.pathname);
         const active = isActive(item.href);
         return (
           <li>
-            {/* The black bubble: a separate element so page transitions can slide it from one link to the next. */}
+            {/* The black bubble; site.js slides it to the clicked link before the page changes. */}
             {active && <span class="nav-pill" aria-hidden="true"></span>}
-            {/* Own transition layer per link, painted above the bubble, so text never disappears while it slides. */}
-            <a href={item.href} class="nav-link" style={`view-transition-name: nav-${item.key}`} aria-current={active ? 'page' : undefined}>{item.label}</a>
+            <a href={item.href} class="nav-link" aria-current={active ? 'page' : undefined}>{item.label}</a>
           </li>
         );
       })}

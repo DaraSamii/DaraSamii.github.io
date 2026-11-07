@@ -55,15 +55,32 @@ const personLd = {
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="color-scheme" content="light dark" />
+    <!-- Page background before the stylesheet arrives, so a page that hasn't drawn yet is never browser-white. -->
+    <style is:inline>
+      html { background: #ffffff; color-scheme: light; }
+      html[data-theme='dark'] { background: #0a1317; color-scheme: dark; }
+      @media (prefers-color-scheme: dark) { html:not([data-theme='light']) { background: #0a1317; color-scheme: dark; } }
+    </style>
     <script is:inline>
       // Old address → new domain, keeping the path. Runs before paint.
       if (location.hostname.endsWith('github.io')) location.replace('https://darasamii.com' + location.pathname + location.search + location.hash);
       (function () {
-        var t = null;
-        try { t = localStorage.getItem('theme'); } catch (e) {}
-        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
-        document.documentElement.classList.add('js');
+        var root = document.documentElement;
+        function applyTheme() {
+          var t = null;
+          try { t = localStorage.getItem('theme'); } catch (e) {}
+          if (t === 'light' || t === 'dark') root.dataset.theme = t; else delete root.dataset.theme;
+        }
+        applyTheme();
+        root.classList.add('js');
+        // A page prepared in the background (speculation rules) re-reads the theme when it is shown.
+        document.addEventListener('prerenderingchange', applyTheme);
       })();
+    </script>
+    <!-- Hovering a link prepares that page in the background, so the click is instant (no half-drawn page in between). -->
+    <script type="speculationrules" is:inline>
+      { "prerender": [{ "where": { "and": [{ "href_matches": "/*" }, { "not": { "href_matches": ["/*.pdf", "/CV/*", "/_img/*", "/assets/*"] } }] }, "eagerness": "moderate" }] }
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

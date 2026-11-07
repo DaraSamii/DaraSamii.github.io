@@ -95,7 +95,10 @@ p { margin: 0; }
 .nav-link:hover { background: var(--surface); color: var(--ink-deep); text-decoration: none; }
 .nav-link[aria-current='page'], .nav-link[aria-current='page']:hover { background: transparent; color: var(--canvas); }
 /* The black bubble behind the active link; page transitions slide it to the new link. */
-.nav-pill { position: absolute; inset: 0; border-radius: var(--r-full); background: var(--ink-deep); view-transition-name: nav-pill; }
+.nav-pill { position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: var(--r-full); background: var(--ink-deep);
+  transition: transform 0.3s cubic-bezier(.3, 1.2, .5, 1), width 0.3s cubic-bezier(.3, 1.2, .5, 1), height 0.3s ease; }
+.nav-link.to-active { color: var(--canvas); }
+.nav-link.from-active { color: var(--charcoal) !important; }
 .nav-actions { display: flex; gap: 8px; align-items: center; }
 .icon-btn {
   width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--hairline); background: var(--card);
@@ -472,21 +475,17 @@ details.more p { margin-top: 10px; }
   :root:not([data-theme='light']) .seg-theme .seg-opt:nth-child(3) { color: #ffdd00; }
 }
 
-/* ---------- Page transitions (Chrome/Edge/Safari; other browsers just navigate) ---------- */
-@view-transition { navigation: auto; }
-.navbar { view-transition-name: site-nav; }
+/* ---------- Same-page transitions (theme switch only) ----------
+   Cross-page view transitions are deliberately NOT used: in Chromium a second click during one cancels both
+   navigations and flashes the page. The nav bubble slide is done in site.js instead. */
 /* Never let the bare browser background show during a transition (that was the white flash). */
 html { background: var(--canvas); }
-/* Bubble and knobs slide; link labels and switch options are their own layers above them and simply crossfade colour. */
-.nav-link, .seg-opt { view-transition-class: nav-item; }
-::view-transition-group(nav-pill), ::view-transition-group(lang-knob), ::view-transition-group(theme-knob), ::view-transition-group(*.nav-item) {
+/* Theme switch: knobs slide, switch labels stay above them, the page crossfades (old page stays opaque underneath). */
+.seg-opt { view-transition-class: nav-item; }
+::view-transition-group(lang-knob), ::view-transition-group(theme-knob), ::view-transition-group(*.nav-item) {
   animation-duration: 0.45s; animation-timing-function: cubic-bezier(.3, 1.2, .5, 1); }
-/* Page change: the old page stays fully opaque underneath while the new one fades in on top: no gap, no flash. */
 ::view-transition-old(root) { animation: none; }
-::view-transition-new(root) { animation: vt-in 0.3s cubic-bezier(.2, .8, .3, 1) both; }
-@keyframes vt-in { from { opacity: 0; transform: translateY(8px); } }
-/* Theme change: a plain crossfade, no movement. */
-html.vt-theme::view-transition-new(root) { animation: fade 0.3s ease both; }
+::view-transition-new(root) { animation: fade 0.3s ease both; }
 
 /* ---------- Appear / disappear ---------- */
 /* Movement only, never invisible: the first frame (what page transitions show) always has the content. */
