@@ -2,7 +2,7 @@
 // Large project block for Research/Rocketry: big gallery with thumbnails, full write-up, links.
 import { useT } from '../i18n/index.js';
 import { opt } from '../lib/img.js';
-const { p, flip = false, lang = 'en' } = Astro.props;
+const { p, flip = false, lang = 'en', eager = false } = Astro.props;
 const t = useT(lang);
 const imgs = p.images ?? [];
 ---
@@ -12,7 +12,7 @@ const imgs = p.images ?? [];
       <>
         <div class="feature-stage">
           <button class="feature-main" type="button" aria-label={`${t('common.openFull')} — ${p.title}`}>
-            <img src={opt(imgs[0].src, 960)} srcset={`${opt(imgs[0].src, 960)} 960w, ${opt(imgs[0].src, 1600)} 1600w`} sizes="(max-width: 900px) 100vw, 640px" data-full={opt(imgs[0].src, 1600)} alt={imgs[0].alt} loading="lazy" decoding="async" />
+            <img src={opt(imgs[0].src, 960)} srcset={`${opt(imgs[0].src, 960)} 960w, ${opt(imgs[0].src, 1600)} 1600w`} sizes="(max-width: 900px) 100vw, 640px" data-full={opt(imgs[0].src, 1600)} alt={imgs[0].alt} loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : undefined} decoding="async" />
           </button>
           {imgs.length > 1 && (
             <>

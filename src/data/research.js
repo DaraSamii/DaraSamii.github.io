@@ -84,7 +84,7 @@ export const themes = [
     projects: ['mesh-gnn'],
   },
   {
-    id: 'rotameter',
+    id: 'flow-metering',
     color: '#f2a918',
     kicker: 'B.Sc. thesis · IUST',
     title: 'CFD-driven design of gas rotameters',

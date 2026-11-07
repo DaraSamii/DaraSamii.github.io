@@ -18,10 +18,11 @@ const { blogPosts, virgool } = content(lang);
     </div>
   </section>
   <section class="section" style="padding-top:8px">
+    <h2 class="sr-only">{t('blog.title')}</h2>
     <div class="container grid grid-3">
-      {blogPosts.map((p) => (
+      {blogPosts.map((p, i) => (
         <a class="card card-hover blog-card reveal" href={p.href} target="_blank" rel="noopener" style="color:inherit;text-decoration:none">
-          <img src={opt(p.image, 960)} alt={p.alt} loading="lazy" decoding="async" />
+          <img src={opt(p.image, 960)} alt={p.alt} loading={i < 3 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} decoding="async" />
           <div class="body rtl" lang="fa">
             <span class="tag" style="justify-self:start">ویرگول</span>
             <h3 style="font-family:inherit">{p.title}</h3>

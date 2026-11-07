@@ -159,7 +159,7 @@ export default {
       title: 'Réseaux de neurones sur graphes comme substituts de la CFD',
       text: 'Des GNN sur maillage qui lisent un polyMesh OpenFOAM comme un graphe et prédisent l’écoulement thermique de Homann 100 fois plus vite que le solveur (IEEE Access, 2025).',
     },
-    rotameter: {
+    'flow-metering': {
       kicker: 'Projet de fin d’études · IUST',
       title: 'Conception de rotamètres à gaz par CFD',
       text: 'Conception et fabrication d’un rotamètre à gaz par CFD transitoire à maillage dynamique sous ANSYS Fluent : le flotteur se déplace avec l’écoulement, le maillage se déforme avec lui, et la position prédite du flotteur a été validée expérimentalement. Publié dans Flow Measurement and Instrumentation (2023).',

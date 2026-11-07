@@ -12,7 +12,7 @@ const t = useT(lang);
 const { profile, socials, profilePhotos, stats, cvHref, coffee, education, experience, awards, certifications, skills, researchInterests, bySlug } = content(lang);
 const featured = ['cr26-cfd', 'thermal-spray', 'mesh-gnn'].map((s) => bySlug[s]);
 ---
-<Base lang={lang} description={profile.intro}>
+<Base lang={lang} description={t('desc.home')}>
   <section class="hero" id="home">
     <div class="container">
       <div class="hero-grid">
@@ -33,7 +33,7 @@ const featured = ['cr26-cfd', 'thermal-spray', 'mesh-gnn'].map((s) => bySlug[s])
           <div class="hero-photo">
             {profilePhotos.map((src, i) => <img src={i === 0 ? opt(src, 960) : undefined} data-src={i === 0 ? undefined : opt(src, 960)} alt={profile.name} class={i === 0 ? 'active' : undefined} fetchpriority={i === 0 ? 'high' : undefined} decoding="async" />)}
             <div class="float-badge badge-1"><i class="fas fa-rocket" aria-hidden="true" style="color:#e41e3f"></i> {t('home.badgeL3')}</div>
-            <div class="float-badge badge-2"><img src="/assets/images/logos/mcgill-crest.png" alt="" /> {t('home.badgePhd')}</div>
+            <div class="float-badge badge-2"><img src={opt('/assets/images/logos/mcgill-crest.png', 400)} alt="" width="20" height="22" /> {t('home.badgePhd')}</div>
           </div>
         </div>
       </div>

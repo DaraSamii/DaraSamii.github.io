@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { Font } from 'astro:assets';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { content, useT, alternates } from '../i18n/index.js';
@@ -82,9 +83,9 @@ const personLd = {
     <script type="speculationrules" is:inline>
       { "prerender": [{ "where": { "and": [{ "href_matches": "/*" }, { "not": { "href_matches": ["/*.pdf", "/CV/*", "/_img/*", "/assets/*"] } }] }, "eagerness": "moderate" }] }
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet" />
+    <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-montserrat" preload={[{ weight: '700' }]} />
+    <Font cssVariable="--font-jetbrains" />
     <!-- Icons load without blocking the first paint. -->
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" /></noscript>
@@ -93,7 +94,7 @@ const personLd = {
   </head>
   <body>
     <a class="skip-link" href="#main">{t('skip')}</a>
-    <Nav lang={lang} />
+    <Nav lang={lang} translated={translated} />
     <main id="main">
       <slot />
     </main>

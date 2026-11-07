@@ -26,7 +26,7 @@ const fr = lang === 'fr';
           <a class="btn btn-secondary" href="#certifications">{t('rocketry.rocketsBtn')}</a>
         </div>
       </div>
-      <img src={opt('/assets/images/rocketry/me-and-rocket.jpg', 960)} alt={t('rocketry.heroAlt')} style="max-height:520px" fetchpriority="high" />
+      <img src={opt('/assets/images/rocketry/me-and-rocket.jpg', 960)} alt={t('rocketry.heroAlt')} width="800" height="1067" style="max-height:520px;width:auto;height:auto;max-width:100%" fetchpriority="high" />
     </div>
   </section>
 
@@ -38,11 +38,11 @@ const fr = lang === 'fr';
         <p style="margin-top:14px;color:var(--charcoal);font-size:17px">{t('rocketry.cr26lead')}</p>
         <div class="card" style="margin-top:24px;padding:8px 8px">
           <table class="flight-table">
-            <thead><tr><th></th><th>{t('rocketry.booster')}</th><th>{t('rocketry.sustainer')}</th></tr></thead>
+            <thead><tr><th><span class="sr-only">{t('rocketry.booster')} / {t('rocketry.sustainer')}</span></th><th>{t('rocketry.booster')}</th><th>{t('rocketry.sustainer')}</th></tr></thead>
             <tbody>
-              <tr><td>{t('rocketry.apogee')}</td><td>{fr ? '14 364 pi (4 378 m)' : '14,364 ft (4,378 m)'}</td><td><b>{fr ? '47 991 pi (14 628 m)' : '47,991 ft (14,628 m)'}</b></td></tr>
-              <tr><td>{t('rocketry.maxSpeed')}</td><td>{fr ? '1 002 pi/s*' : '1,002 ft/s*'}</td><td>{fr ? '1 599 pi/s (487 m/s)' : '1,599 ft/s (487 m/s)'}</td></tr>
-              <tr><td>{t('rocketry.peakMach')}</td><td>{fr ? '0,92*' : '0.92*'}</td><td><b>{fr ? '1,54' : '1.54'}</b></td></tr>
+              <tr><th scope=\"row\">{t('rocketry.apogee')}</th><td>{fr ? '14 364 pi (4 378 m)' : '14,364 ft (4,378 m)'}</td><td><b>{fr ? '47 991 pi (14 628 m)' : '47,991 ft (14,628 m)'}</b></td></tr>
+              <tr><th scope=\"row\">{t('rocketry.maxSpeed')}</th><td>{fr ? '1 002 pi/s*' : '1,002 ft/s*'}</td><td>{fr ? '1 599 pi/s (487 m/s)' : '1,599 ft/s (487 m/s)'}</td></tr>
+              <tr><th scope=\"row\">{t('rocketry.peakMach')}</th><td>{fr ? '0,92*' : '0.92*'}</td><td><b>{fr ? '1,54' : '1.54'}</b></td></tr>
             </tbody>
           </table>
           <p class="meta" style="padding:8px 14px">{t('rocketry.gap')}</p>

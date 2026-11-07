@@ -17,11 +17,11 @@ const { pianoVideos } = content(lang);
   </section>
   <section class="section" style="padding-top:8px">
     <div class="container grid grid-2">
-      {pianoVideos.map((v) => (
+      {pianoVideos.map((v, i) => (
         <div class="video reveal">
           {/* Thumbnail first; the YouTube player (≈1 MB of scripts) loads only on click. See site.js [data-yt]. */}
           <button type="button" class="yt" data-yt={v.id} data-title={v.title} aria-label={`${t('piano.play')}: ${v.title}`}>
-            <img src={`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" width="480" height="360" />
+            <img src={`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`} alt="" loading={i < 2 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} decoding="async" width="480" height="360" />
             <span class="yt-play" aria-hidden="true"><i class="fas fa-play"></i></span>
           </button>
         </div>

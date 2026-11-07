@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 ---
 <Base title="Not found · Page introuvable" translated={false}>
+  <Fragment slot="head"><meta name="robots" content="noindex" /></Fragment>
   <section class="page-hero" style="min-height:50vh">
     <div class="container">
       <span class="kicker">404</span>

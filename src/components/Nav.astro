@@ -1,6 +1,6 @@
 ---
 import { content, useT, lp, alternates } from '../i18n/index.js';
-const { lang = 'en' } = Astro.props;
+const { lang = 'en', translated = true } = Astro.props;
 const t = useT(lang);
 const { profile, cvHref } = content(lang);
 const items = ['home', 'research', 'rocketry', 'teaching', 'projects', 'blog', 'piano', 'world'].map((k) => ({
@@ -12,7 +12,8 @@ const path = Astro.url.pathname.replace(/\/?$/, '/');
 const home = lp('/', lang);
 const isActive = (href) => (href === home ? path === home : path.startsWith(href));
 const other = lang === 'fr' ? 'en' : 'fr';
-const alt = alternates(Astro.url.pathname);
+// Untranslated pages (404, friends) switch to the other language's home page.
+const alt = translated ? alternates(Astro.url.pathname) : { en: '/', fr: '/fr/' };
 ---
 <header class="navbar">
   <div class="container nav-inner">
@@ -34,13 +35,14 @@ const alt = alternates(Astro.url.pathname);
     </ul>
     <div class="nav-actions">
       {/* Language: a two-option switch; the knob sits on the current language and slides before navigating. */}
-      <a href={alt[other]} class="seg seg-lang" data-pos={lang === 'fr' ? 1 : 0} data-lang-switch hreflang={other} aria-label={t('nav.switchLabel')} title={t('nav.switchLabel')}>
+      <a href={alt[other]} class="seg seg-lang" data-pos={lang === 'fr' ? 1 : 0} data-lang-switch hreflang={other} title={t('nav.switchLabel')}>
         <span class="seg-knob" aria-hidden="true"></span>
         <span class="seg-opt" lang="en" style="view-transition-name: seg-en">EN</span>
         <span class="seg-opt" lang="fr" style="view-transition-name: seg-fr">FR</span>
+        <span class="sr-only">{t('nav.switchLabel')}</span>
       </a>
       {/* Theme: knob position comes from CSS (data-theme / OS preference), so it is right before any JS runs. */}
-      <button class="seg seg-theme theme-toggle" type="button" role="switch" aria-label={t('nav.theme')}>
+      <button class="seg seg-theme theme-toggle" type="button" aria-label={t('nav.theme')}>
         <span class="seg-knob" aria-hidden="true"></span>
         <span class="seg-opt" aria-hidden="true" style="view-transition-name: seg-light"><i class="fas fa-sun"></i></span>
         <span class="seg-opt" aria-hidden="true" style="view-transition-name: seg-dark"><i class="fas fa-moon"></i></span>

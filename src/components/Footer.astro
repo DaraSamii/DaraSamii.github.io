@@ -9,12 +9,12 @@ const year = new Date().getFullYear();
   <div class="container">
     <div class="footer-grid">
       <div>
-        <h4>{profile.name}</h4>
+        <h2>{profile.name}</h2>
         <p>{profile.role}<br />{profile.location}</p>
         <p style="margin-top:12px"><a href={`mailto:${profile.email}`}>{profile.email}</a></p>
       </div>
       <div>
-        <h4>{t('footer.work')}</h4>
+        <h2>{t('footer.work')}</h2>
         <ul>
           <li><a href={lp('/research/', lang)}>{t('nav.research')}</a></li>
           <li><a href={lp('/rocketry/', lang)}>{t('nav.rocketry')}</a></li>
@@ -24,7 +24,7 @@ const year = new Date().getFullYear();
         </ul>
       </div>
       <div>
-        <h4>{t('footer.personal')}</h4>
+        <h2>{t('footer.personal')}</h2>
         <ul>
           <li><a href={lp('/blog/', lang)}>{t('nav.blog')}</a></li>
           <li><a href={lp('/piano/', lang)}>{t('nav.piano')}</a></li>
@@ -33,7 +33,7 @@ const year = new Date().getFullYear();
         </ul>
       </div>
       <div>
-        <h4>{t('footer.elsewhere')}</h4>
+        <h2>{t('footer.elsewhere')}</h2>
         <ul>
           {socials.map((s) => <li><a href={s.href} target="_blank" rel="noopener"><i class={s.icon} aria-hidden="true" style={`color:${s.color}`}></i> {s.label}</a></li>)}
           <li><a href={coffee.href} target="_blank" rel="noopener"><i class="fas fa-mug-hot" aria-hidden="true" style="color:#f2a918"></i> {coffee.label}</a></li>

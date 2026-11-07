@@ -35,7 +35,7 @@ for await (const file of walk(SRC)) {
       const animated = gif && w > 400;
       await sharp(file, { animated })
         .resize({ width: gif ? Math.min(w, 960) : w, withoutEnlargement: true })
-        .webp({ quality: animated ? 70 : 80, effort: 4 })
+        .webp({ quality: animated ? 70 : 75, effort: 4 })
         .toFile(out);
       made++;
     })());

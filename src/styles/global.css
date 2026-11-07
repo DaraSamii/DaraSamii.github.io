@@ -22,9 +22,9 @@
   --shadow: 0 1px 4px rgba(20, 22, 26, 0.12);
   --shadow-lg: 0 18px 48px -18px rgba(10, 19, 23, 0.25);
 
-  --font-display: 'Montserrat', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-  --font-body: 'Inter', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-display: var(--font-montserrat), 'Noto Sans', sans-serif;
+  --font-body: var(--font-inter), 'Noto Sans', sans-serif;
+  --font-mono: var(--font-jetbrains);
 
   --r-sm: 4px; --r-lg: 8px; --r-xl: 16px; --r-xxl: 24px; --r-xxxl: 32px; --r-full: 100px;
   --s-xs: 8px; --s-md: 12px; --s-base: 16px; --s-xl: 24px; --s-xxl: 32px; --s-xxxl: 40px;
@@ -168,6 +168,8 @@ p { margin: 0; }
 .section-head p { color: var(--steel); max-width: 640px; margin-top: 10px; font-size: 17px; }
 .page-hero { padding: 72px 0 48px; }
 .page-hero h1 { font-size: clamp(38px, 6vw, 64px); font-weight: 600; line-height: 1.1; margin-top: 12px; }
+/* links inside running text are underlined, not told apart by colour alone */
+.lead a { text-decoration: underline; text-underline-offset: 3px; }
 .page-hero .lead { font-size: 19px; color: var(--charcoal); max-width: 760px; margin-top: 18px; line-height: 1.55; }
 .page-hero .actions { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 12px; }
 .grid { display: grid; gap: 20px; }
@@ -316,6 +318,7 @@ details.more p { margin-top: 10px; }
 .flight-table { width: 100%; border-collapse: collapse; font-size: 15px; }
 .flight-table th, .flight-table td { padding: 12px 14px; border-bottom: 1px solid var(--hairline-soft); text-align: left; }
 .flight-table th { color: var(--steel); font: 700 12px var(--font-body); text-transform: uppercase; letter-spacing: 0.06em; }
+.flight-table tbody th { font: inherit; color: inherit; text-transform: none; letter-spacing: normal; font-weight: 400; }
 .flight-table td b { font-family: var(--font-display); color: var(--ink-deep); }
 .cert-ladder { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .cert-step { border-radius: var(--r-xxl); padding: 24px; background: var(--card); border: 1px solid var(--hairline-soft); }
@@ -362,7 +365,7 @@ details.more p { margin-top: 10px; }
 /* ---------- Footer ---------- */
 .footer { border-top: 1px solid var(--hairline-soft); padding: var(--s-section) 0 40px; color: var(--steel); font-size: 14px; }
 .footer-grid { display: grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: 32px; }
-.footer h4 { font: 700 13px var(--font-body); color: var(--ink-deep); margin-bottom: 12px; }
+.footer h2 { font: 700 13px var(--font-body); color: var(--ink-deep); margin-bottom: 12px; }
 .footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .footer a { color: var(--steel); }
 .footer a:hover { color: var(--ink-deep); }
