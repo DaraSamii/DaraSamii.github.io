@@ -97,7 +97,8 @@ p { margin: 0; }
 /* The black bubble behind the active link; page transitions slide it to the new link. */
 .nav-pill { position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: var(--r-full); background: var(--ink-deep);
   transition: transform 0.3s cubic-bezier(.3, 1.2, .5, 1), width 0.3s cubic-bezier(.3, 1.2, .5, 1), height 0.3s ease; }
-.nav-link.to-active { color: var(--canvas); }
+/* :hover too, or the clicked (hovered) link's light hover background hides the arriving bubble and its text */
+.nav-link.to-active, .nav-link.to-active:hover { background: transparent; color: var(--canvas); }
 .nav-link.from-active { color: var(--charcoal) !important; }
 .nav-actions { display: flex; gap: 8px; align-items: center; }
 .icon-btn {
@@ -240,6 +241,12 @@ input[type='range'] { width: 100%; accent-color: var(--primary); height: 28px; }
 .cp-plot .dot { display: inline-block; width: 10px; height: 3px; border-radius: 2px; vertical-align: middle; margin-left: 6px; }
 .cp-plot .dot.up { background: var(--primary); } .cp-plot .dot.lo { background: #f2994a; }
 @media (max-width: 900px) { .airfoil-panel { grid-template-columns: 1fr; } .cp-plot { margin: 0 24px 18px; } }
+/* Phones: the canvas is short, so the readouts and hint sit under it instead of covering the airfoil. */
+@media (max-width: 640px) {
+  .tunnel-hud { position: static; padding: 10px 12px 0; gap: 6px; }
+  .hud-chip { padding: 4px 10px; font-size: 11px; }
+  .tunnel-hint { position: relative; right: auto; bottom: auto; display: inline-block; margin: 8px 12px 12px; }
+}
 .tunnel-note { padding: 0 24px 22px; color: var(--steel); font-size: 13px; }
 
 /* ---------- Timeline / education ---------- */
@@ -271,6 +278,7 @@ input[type='range'] { width: 100%; accent-color: var(--primary); height: 28px; }
 /* ---------- Project cards ---------- */
 .project { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
 .project[hidden] { display: none; }
+.project-media, .feature-stage { touch-action: pan-y pinch-zoom; }
 .project-media { position: relative; aspect-ratio: 16 / 10; background: var(--surface); overflow: hidden; }
 .project-media.white { background: #fff; }
 .project-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s; cursor: zoom-in; }

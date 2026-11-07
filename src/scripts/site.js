@@ -140,6 +140,20 @@ if (modal) {
   });
 }
 
+// Horizontal swipe on touch screens calls go(+1 | -1); vertical swipes still scroll the page,
+// and the tap that ends a swipe does not also open the viewer.
+function swipe(el, go) {
+  let sx = null, sy = null, swiped = false;
+  el.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  el.addEventListener('touchend', (e) => {
+    if (sx === null) return;
+    const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > 1.5 * Math.abs(dy)) { go(dx < 0 ? 1 : -1); swiped = true; }
+    sx = null;
+  });
+  el.addEventListener('click', (e) => { if (swiped) { swiped = false; e.stopPropagation(); } }, true);
+}
+
 document.querySelectorAll('.project-media[data-slides]').forEach((box) => {
   const imgs = [...box.querySelectorAll('img')];
   const dots = [...box.querySelectorAll('.slide-dots span')];
@@ -154,6 +168,7 @@ document.querySelectorAll('.project-media[data-slides]').forEach((box) => {
   };
   box.querySelector('.slide-prev')?.addEventListener('click', () => show(i - 1));
   box.querySelector('.slide-next')?.addEventListener('click', () => show(i + 1));
+  if (imgs.length > 1) swipe(box, (d) => { clearInterval(timer); show(i + d); });
   const full = imgs.map((im) => ({ src: im.dataset.full || im.dataset.src || im.src, alt: im.alt }));
   imgs.forEach((img, n) => img.addEventListener('click', () => openModal(full, n)));
   if (imgs.length > 1 && !reduced) {
@@ -197,17 +212,9 @@ document.querySelectorAll('[data-gallery]').forEach((g) => {
   thumbs.forEach((t, i) => t.addEventListener('click', () => show(i)));
   g.querySelector('.gal-prev')?.addEventListener('click', () => show(cur - 1));
   g.querySelector('.gal-next')?.addEventListener('click', () => show(cur + 1));
-  // Horizontal swipe on touch screens; vertical swipes still scroll the page.
-  let sx = null, sy = null, swiped = false;
   const stage = g.querySelector('.feature-stage');
-  stage?.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
-  stage?.addEventListener('touchend', (e) => {
-    if (sx === null) return;
-    const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
-    if (Math.abs(dx) > 40 && Math.abs(dx) > 1.5 * Math.abs(dy)) { show(cur + (dx < 0 ? 1 : -1)); swiped = true; }
-    sx = null;
-  });
-  g.querySelector('.feature-main').addEventListener('click', () => { if (swiped) { swiped = false; return; } openModal(list, cur); });
+  if (stage) swipe(stage, (d) => show(cur + d));
+  g.querySelector('.feature-main').addEventListener('click', () => openModal(list, cur));
 });
 
 // Photo groups (awards, certifications): any image button opens the viewer on its group.
