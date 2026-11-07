@@ -4,6 +4,7 @@ const { lang = 'en' } = Astro.props;
 const t = useT(lang);
 const { profile, cvHref } = content(lang);
 const items = ['home', 'research', 'rocketry', 'teaching', 'projects', 'blog', 'piano', 'world'].map((k) => ({
+  key: k,
   label: t(`nav.${k}`),
   href: lp(k === 'home' ? '/' : `/${k}/`, lang),
 }));
@@ -26,7 +27,8 @@ const alt = alternates(Astro.url.pathname);
           <li>
             {/* The black bubble: a separate element so page transitions can slide it from one link to the next. */}
             {active && <span class="nav-pill" aria-hidden="true"></span>}
-            <a href={item.href} class="nav-link" aria-current={active ? 'page' : undefined}>{item.label}</a>
+            {/* Own transition layer per link, painted above the bubble, so text never disappears while it slides. */}
+            <a href={item.href} class="nav-link" style={`view-transition-name: nav-${item.key}`} aria-current={active ? 'page' : undefined}>{item.label}</a>
           </li>
         );
       })}
@@ -35,14 +37,14 @@ const alt = alternates(Astro.url.pathname);
       {/* Language: a two-option switch; the knob sits on the current language and slides before navigating. */}
       <a href={alt[other]} class="seg seg-lang" data-pos={lang === 'fr' ? 1 : 0} data-lang-switch hreflang={other} aria-label={t('nav.switchLabel')} title={t('nav.switchLabel')}>
         <span class="seg-knob" aria-hidden="true"></span>
-        <span class="seg-opt" lang="en">EN</span>
-        <span class="seg-opt" lang="fr">FR</span>
+        <span class="seg-opt" lang="en" style="view-transition-name: seg-en">EN</span>
+        <span class="seg-opt" lang="fr" style="view-transition-name: seg-fr">FR</span>
       </a>
       {/* Theme: knob position comes from CSS (data-theme / OS preference), so it is right before any JS runs. */}
       <button class="seg seg-theme theme-toggle" type="button" role="switch" aria-label={t('nav.theme')}>
         <span class="seg-knob" aria-hidden="true"></span>
-        <span class="seg-opt" aria-hidden="true"><i class="fas fa-sun"></i></span>
-        <span class="seg-opt" aria-hidden="true"><i class="fas fa-moon"></i></span>
+        <span class="seg-opt" aria-hidden="true" style="view-transition-name: seg-light"><i class="fas fa-sun"></i></span>
+        <span class="seg-opt" aria-hidden="true" style="view-transition-name: seg-dark"><i class="fas fa-moon"></i></span>
       </button>
       <a href={cvHref} class="btn btn-primary btn-sm" target="_blank" rel="noopener"><i class="fas fa-file-pdf" aria-hidden="true"></i><span class="nav-cv-label">{t('nav.cv')}</span><span class="sr-only"> (PDF)</span></a>
       <button class="icon-btn nav-toggle" type="button" aria-label={t('nav.menu')} aria-expanded="false" aria-controls="nav-menu">

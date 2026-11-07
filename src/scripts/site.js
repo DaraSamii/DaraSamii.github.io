@@ -12,8 +12,10 @@ document.querySelectorAll('.theme-toggle').forEach((btn) => {
       window.dispatchEvent(new Event('themechange'));
     };
     // Crossfade the whole page; the knob has its own transition name, so it slides instead of fading.
-    if (document.startViewTransition && !reduced) document.startViewTransition(apply);
-    else apply();
+    if (document.startViewTransition && !reduced) {
+      root.classList.add('vt-theme');
+      document.startViewTransition(apply).finished.finally(() => root.classList.remove('vt-theme'));
+    } else apply();
   });
 });
 
