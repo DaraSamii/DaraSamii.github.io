@@ -11,9 +11,9 @@ export default defineConfig({
   // Fonts are downloaded at build and served from this site with metric-matched fallbacks:
   // no render-blocking third-party CSS and no layout shift when they swap in.
   fonts: [
-    { provider: fontProviders.google(), name: 'Inter', cssVariable: '--font-inter', weights: [400, 500, 600, 700], subsets: ['latin'], fallbacks: ['Helvetica Neue', 'Arial', 'sans-serif'] },
-    { provider: fontProviders.google(), name: 'Montserrat', cssVariable: '--font-montserrat', weights: [500, 600, 700], subsets: ['latin'], fallbacks: ['Helvetica Neue', 'Arial', 'sans-serif'] },
-    { provider: fontProviders.google(), name: 'JetBrains Mono', cssVariable: '--font-jetbrains', weights: [400, 500, 600], subsets: ['latin'], fallbacks: ['ui-monospace', 'monospace'] },
+    { provider: fontProviders.google(), name: 'Inter', cssVariable: '--font-inter', weights: [400, 500, 600, 700], subsets: ['latin'], styles: ['normal'], fallbacks: ['Helvetica Neue', 'Arial', 'sans-serif'] },
+    { provider: fontProviders.google(), name: 'Montserrat', cssVariable: '--font-montserrat', weights: [500, 600, 700], subsets: ['latin'], styles: ['normal'], fallbacks: ['Helvetica Neue', 'Arial', 'sans-serif'] },
+    { provider: fontProviders.google(), name: 'JetBrains Mono', cssVariable: '--font-jetbrains', weights: [400, 500, 600], subsets: ['latin'], styles: ['normal'], fallbacks: ['ui-monospace', 'monospace'] },
   ],
   integrations: [sitemap({ filter: (page) => !page.includes('/friends'), i18n: { defaultLocale: 'en', locales: { en: 'en-CA', fr: 'fr-CA' } } })],
   markdown: {

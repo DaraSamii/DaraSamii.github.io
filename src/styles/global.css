@@ -54,7 +54,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 16px); -webkit-text-size-adjust: 100%; }
+html { scrollbar-gutter: stable; scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 16px); -webkit-text-size-adjust: 100%; }
 body {
   margin: 0; background: var(--canvas); color: var(--ink);
   font: 400 16px/1.5 var(--font-body); letter-spacing: -0.01em;
@@ -502,18 +502,10 @@ html { background: var(--canvas); }
 /* Movement only, never invisible: the first frame (what page transitions show) always has the content. */
 @keyframes rise { from { transform: translateY(14px); } }
 @keyframes fade { from { opacity: 0; } }
-.hero-grid > div:first-child > * { animation: rise 0.6s cubic-bezier(.2, .8, .3, 1) both; }
-.hero-grid > div:first-child > :nth-child(2) { animation-delay: 0.06s; }
-.hero-grid > div:first-child > :nth-child(3) { animation-delay: 0.12s; }
-.hero-grid > div:first-child > :nth-child(4) { animation-delay: 0.18s; }
-.hero-grid > div:first-child > :nth-child(5) { animation-delay: 0.24s; }
 .hero-photo { animation: rise 0.7s 0.1s cubic-bezier(.2, .8, .3, 1) both; }
 .float-badge { animation: rise 0.6s 0.5s cubic-bezier(.3, 1.3, .5, 1) both; }
 .badge-2 { animation-delay: 0.65s; }
-.page-hero .container > * { animation: rise 0.55s cubic-bezier(.2, .8, .3, 1) both; }
-.page-hero .container > :nth-child(2) { animation-delay: 0.05s; }
-.page-hero .container > :nth-child(3) { animation-delay: 0.1s; }
-.page-hero .container > :nth-child(4) { animation-delay: 0.15s; }
+/* Page text has no entrance animation: it is drawn in place on arrival, so page changes never look jumpy. */
 /* Off-screen images fade in once loaded (site.js adds .img-wait only to those). */
 .js img.img-wait { opacity: 0 !important; }
 img { transition: opacity 0.4s ease; }

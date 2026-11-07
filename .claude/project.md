@@ -36,3 +36,5 @@ The user asked to replace an earlier lattice-Boltzmann wind tunnel because it us
 - Old URLs (`/pages/*.html`) are mapped in `public/_redirects` (Cloudflare syntax).
 - CV edits made for the site are saved in `~/Professional/Professional Docs/CV_website_edits_2026-11-06/`. CV: compiled from the user's LaTeX source (`CV/main.tex` in `~/Professional/Professional Docs/CV_simpleTempelate.zip`, kept OUT of the repo because it contains cover letters/SOPs). Fontawesome5 map isn't enabled in the system TeX: compile with `pdflatex '\pdfmapfile{+fontawesome5.map}\input{main}'`.
 - Persian content needs `class="rtl"` + `lang="fa"` (Vazirmatn font loaded on /blog).
+
+- Page text (hero/page-hero) has no entrance animation on purpose: it made page changes look jumpy. Only the hero photo and badges animate in. Fonts are self-hosted via Astro fonts API (normal style only, all three preloaded).

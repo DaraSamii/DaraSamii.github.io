@@ -30,6 +30,16 @@ const personLd = {
   knowsAbout: ['Computational Fluid Dynamics', 'OpenFOAM', 'Rocketry', 'Combustion', 'Graph Neural Networks', 'Aeroacoustics'],
   sameAs: socials.map((s) => s.href),
 };
+// Home pages are marked as a profile page about this person (Google's ProfilePage rich result).
+const isHome = alt.en === '/' && translated && (Astro.url.pathname === '/' || Astro.url.pathname === '/fr/');
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebSite', '@id': `${Astro.site}#site`, name: profile.name, url: Astro.site.href, inLanguage: ['en-CA', 'fr-CA'] },
+    { ...personLd, '@context': undefined, '@id': `${Astro.site}#person` },
+    ...(isHome ? [{ '@type': 'ProfilePage', url: canonical.href, inLanguage: t('meta.htmlLang'), mainEntity: { '@id': `${Astro.site}#person` } }] : []),
+  ],
+};
 ---
 <!doctype html>
 <html lang={t('meta.htmlLang')}>
@@ -84,12 +94,12 @@ const personLd = {
       { "prerender": [{ "where": { "and": [{ "href_matches": "/*" }, { "not": { "href_matches": ["/*.pdf", "/CV/*", "/_img/*", "/assets/*"] } }] }, "eagerness": "moderate" }] }
     </script>
     <Font cssVariable="--font-inter" preload />
-    <Font cssVariable="--font-montserrat" preload={[{ weight: '700' }]} />
-    <Font cssVariable="--font-jetbrains" />
+    <Font cssVariable="--font-montserrat" preload />
+    <Font cssVariable="--font-jetbrains" preload />
     <!-- Icons load without blocking the first paint. -->
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" /></noscript>
-    <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
     <slot name="head" />
   </head>
   <body>
