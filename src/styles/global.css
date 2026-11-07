@@ -470,6 +470,8 @@ details.more p { margin-top: 10px; }
 .seg:hover { text-decoration: none; border-color: var(--stone); }
 .seg-knob { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: var(--r-full); background: var(--ink-deep);
   box-shadow: var(--shadow); transition: transform 0.35s cubic-bezier(.3, 1.35, .5, 1); }
+/* Icons load after the first paint; give each a fixed slot so neighbouring text never shifts when they appear. */
+.fas, .far, .fab, .fa { display: inline-block; width: 1.25em; line-height: 1; text-align: center; }
 .seg-opt { position: relative; z-index: 1; width: 32px; display: grid; place-items: center; color: var(--steel); letter-spacing: 0.04em; transition: color 0.3s; }
 .seg-lang .seg-knob { view-transition-name: lang-knob; }
 .seg-theme .seg-knob { view-transition-name: theme-knob; }
