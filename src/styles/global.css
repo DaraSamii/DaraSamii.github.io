@@ -359,11 +359,12 @@ details.more p { margin-top: 10px; }
 @media (max-width: 800px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
 
 /* ---------- Reveal ---------- */
-.js .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
-.js .reveal.in { opacity: 1; transform: none; }
+/* Visible by default. site.js adds .pre only to cards that start below the screen, so nothing on screen ever blanks out. */
+.reveal { transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.pre { opacity: 0; transform: translateY(16px); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .js .reveal { opacity: 1; transform: none; transition: none; }
+  .reveal.pre { opacity: 1; transform: none; transition: none; }
   .hero-photo > img { transition: none; }
 }
 
@@ -488,7 +489,8 @@ html { background: var(--canvas); }
 html.vt-theme::view-transition-new(root) { animation: fade 0.3s ease both; }
 
 /* ---------- Appear / disappear ---------- */
-@keyframes rise { from { opacity: 0; transform: translateY(16px); } }
+/* Movement only, never invisible: the first frame (what page transitions show) always has the content. */
+@keyframes rise { from { transform: translateY(14px); } }
 @keyframes fade { from { opacity: 0; } }
 .hero-grid > div:first-child > * { animation: rise 0.6s cubic-bezier(.2, .8, .3, 1) both; }
 .hero-grid > div:first-child > :nth-child(2) { animation-delay: 0.06s; }
@@ -502,7 +504,7 @@ html.vt-theme::view-transition-new(root) { animation: fade 0.3s ease both; }
 .page-hero .container > :nth-child(2) { animation-delay: 0.05s; }
 .page-hero .container > :nth-child(3) { animation-delay: 0.1s; }
 .page-hero .container > :nth-child(4) { animation-delay: 0.15s; }
-/* Images fade in once loaded (site.js adds .img-wait only to images not yet loaded). */
+/* Off-screen images fade in once loaded (site.js adds .img-wait only to those). */
 .js img.img-wait { opacity: 0 !important; }
 img { transition: opacity 0.4s ease; }
 .feature-main img.swap { opacity: 0; }

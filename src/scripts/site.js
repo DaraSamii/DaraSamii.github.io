@@ -27,9 +27,10 @@ document.querySelectorAll('[data-lang-switch]').forEach((a) => a.addEventListene
   setTimeout(() => { location.href = a.href; }, 280);
 }));
 
-// Images that are not loaded yet fade in when they arrive.
+// Off-screen images that are not loaded yet fade in when they arrive. Never hide anything already on screen.
+const belowFold = (el) => el.getBoundingClientRect().top > innerHeight;
 document.querySelectorAll('img').forEach((img) => {
-  if (img.complete || !img.getAttribute('src')) return;
+  if (img.complete || !img.getAttribute('src') || !belowFold(img)) return;
   img.classList.add('img-wait');
   const done = () => img.classList.remove('img-wait');
   img.addEventListener('load', done, { once: true });
@@ -212,7 +213,8 @@ filter?.addEventListener('click', (e) => {
 });
 
 // Reveal on scroll
-const io = 'IntersectionObserver' in window && new IntersectionObserver((entries) => {
-  entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+// Only cards that start below the screen are hidden (.pre) and then revealed as they scroll in.
+const io = 'IntersectionObserver' in window && !reduced && new IntersectionObserver((entries) => {
+  entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.remove('pre'); io.unobserve(en.target); } });
 }, { rootMargin: '0px 0px -40px 0px' });
-document.querySelectorAll('.reveal').forEach((el) => (io ? io.observe(el) : el.classList.add('in')));
+if (io) document.querySelectorAll('.reveal').forEach((el) => { if (belowFold(el)) { el.classList.add('pre'); io.observe(el); } });
